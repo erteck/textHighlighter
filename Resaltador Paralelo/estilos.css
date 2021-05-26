@@ -1,0 +1,30 @@
+identifier{
+    color: blue;
+}
+userIdentifier{
+    color: rgb(0, 137, 161);
+}
+operator{
+    color:deeppink;
+}
+delimiter{
+    color: red;
+}
+string{
+    color: green;
+}
+commentary{
+    color: gray;
+}
+float{
+    color:orange;
+}
+integer{
+    color:orange;
+}
+imaginary{
+    color:orange;
+}
+pre{
+    font-size: xx-large;
+}
