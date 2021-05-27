@@ -26,15 +26,15 @@ def findFiles(directory):
         
 def defineDirectory(directoryName):
     if directoryName not in os.listdir(os.getcwd()):  
-        print(directoryName)
-        return str(directoryName)
+        #print(directoryName)
+        return directoryName
     else:
         directoryName += "-1"
-        defineDirectory(directoryName)
+        return defineDirectory(directoryName)
 
 def main(directory,sExpressions,cores):
     directoryName = "Resultados"
-    directoryName1 = str(defineDirectory(directoryName))
+    directoryName = defineDirectory(directoryName)
     #print(type(newDirectory))
     chunks = len(files)//cores
     if chunks < 1:
@@ -42,15 +42,17 @@ def main(directory,sExpressions,cores):
     data = ResaltadorTexto.expressionsFile(sExpressions)
     htmlNames = []
     findFiles(directory)
-    os.mkdir(directoryName1)
-    os.chdir(directoryName1)
-    with ProcessPoolExecutor(max_workers=6) as executor:
-        fileNames = executor.map(nameHTML, files)
-    for name in fileNames:
-        htmlNames.append(name)
+    os.mkdir(directoryName)
+    os.chdir(directoryName)
+    for name in files:
+        htmlNames.append(nameHTML(name))
+    #with ProcessPoolExecutor(max_workers=6) as executor:
+    #    fileNames = executor.map(nameHTML, files, chunksize = chunks)
+    #for name in fileNames:
+    #    htmlNames.append(name)
     with ProcessPoolExecutor(max_workers=6) as executor:        
         newFun = functools.partial(ResaltadorTexto.textHighlighter, data[0], data[1])
-        future = executor.map(newFun, files, htmlNames, chunksize = chunks)
+        executor.map(newFun, files, htmlNames, chunksize = chunks)
     
         
 if __name__ == '__main__': 
