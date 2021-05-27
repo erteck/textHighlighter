@@ -1,0 +1,286 @@
+
+    <html>
+    <head>
+        <link rel="stylesheet" href="../estilos.css">
+    </head>
+    <body>
+    <p><pre><commentary># Resaltador de Texto</commentary>
+<commentary># Edna Jacqueline Zavala Ortega A01750480</commentary>
+<commentary># Erick Alberto Bustos Cruz A01378966</commentary>
+
+<identifier>import</identifier> <userIdentifier>re</userIdentifier>
+    
+<identifier>def</identifier> <userIdentifier>createPatterns</userIdentifier><delimiter>(</delimiter><userIdentifier>line</userIdentifier><delimiter>)</delimiter><delimiter>:</delimiter>
+    <string>"""
+    Función que, dada una línea de un archivo de texto con expresiones s, regresa un string
+    de la forma  ->   [identificador]: [expresión regular de la librería re de python]
+    Las expresiones s recibidas deben estar estructuradas con la notación especificada
+    en el reporte anexo.
+    """</string>
+    <commentary># Resultado</commentary>
+    <userIdentifier>result</userIdentifier> <delimiter>=</delimiter> <string>""</string>
+    
+    <commentary># Pila LIFO con caracteres de concatenación de las intrucciones empleadas en las expresiones s.</commentary>
+    <commentary># Ejemplo: la instrucción de unión (+) en las expresiones s requiere utilizar el caracter | para</commentary>
+    <commentary># concatenar sus argumentos al realizar la traducción a expresiones regulares de python. (+ 1 2 3) -> (1|2|3)</commentary>
+    <userIdentifier>concat</userIdentifier> <delimiter>=</delimiter> <delimiter>[</delimiter><string>""</string><delimiter>]</delimiter>
+    
+    <commentary># Pila LIFO con caracteres que deben ser agregados al final de una intrucción dentro de una</commentary>
+    <commentary># expresión regular de python.</commentary>
+    <commentary># Ejemplo: la instrucción de cerradura (*) en las expresiones s requiere colocar el caracter *</commentary>
+    <commentary># al final de los argumentos al realizar la traducción a expresiones regulares de python. </commentary>
+    <commentary># (* [abc]) -> [abc]*</commentary>
+    <userIdentifier>lastSymbol</userIdentifier> <delimiter>=</delimiter> <delimiter>[</delimiter><string>""</string><delimiter>]</delimiter>
+    
+    <identifier>for</identifier> <userIdentifier>i</userIdentifier> <identifier>in</identifier> <userIdentifier>range</userIdentifier><delimiter>(</delimiter><integer>0</integer><delimiter>,</delimiter> <userIdentifier>len</userIdentifier><delimiter>(</delimiter><userIdentifier>line</userIdentifier><delimiter>)</delimiter><delimiter>)</delimiter><delimiter>:</delimiter>
+        <commentary># Detección del final de una instrucción</commentary>
+        <identifier>if</identifier> <userIdentifier>line</userIdentifier><delimiter>[</delimiter><userIdentifier>i</userIdentifier><delimiter>]</delimiter> <operator>==</operator> <string>')'</string> <identifier>and</identifier> <userIdentifier>line</userIdentifier><delimiter>[</delimiter><userIdentifier>i</userIdentifier> <operator>-</operator> <integer>1</integer><delimiter>]</delimiter> <operator>!=</operator> <string>"\\"</string><delimiter>:</delimiter>
+            <userIdentifier>concat</userIdentifier><delimiter>.</delimiter><userIdentifier>pop</userIdentifier><delimiter>(</delimiter><delimiter>)</delimiter>
+            <userIdentifier>result</userIdentifier> <delimiter>+=</delimiter> <userIdentifier>lastSymbol</userIdentifier><delimiter>[</delimiter><operator>-</operator><integer>1</integer><delimiter>]</delimiter>
+            <userIdentifier>lastSymbol</userIdentifier><delimiter>.</delimiter><userIdentifier>pop</userIdentifier><delimiter>(</delimiter><delimiter>)</delimiter>
+        <commentary># Detección del inicio de una instrucción de concatenación</commentary>
+        <identifier>elif</identifier> <userIdentifier>line</userIdentifier><delimiter>[</delimiter><userIdentifier>i</userIdentifier><delimiter>:</delimiter><userIdentifier>i</userIdentifier> <operator>+</operator> <integer>2</integer><delimiter>]</delimiter> <operator>==</operator> <string>"(."</string><delimiter>:</delimiter>
+            <userIdentifier>concat</userIdentifier><delimiter>.</delimiter><userIdentifier>append</userIdentifier><delimiter>(</delimiter><string>''</string><delimiter>)</delimiter>
+            <userIdentifier>lastSymbol</userIdentifier><delimiter>.</delimiter><userIdentifier>append</userIdentifier><delimiter>(</delimiter><string>''</string><delimiter>)</delimiter>
+        <commentary># Detección del inicio de una instrucción de cerradura</commentary>
+        <identifier>elif</identifier> <userIdentifier>line</userIdentifier><delimiter>[</delimiter><userIdentifier>i</userIdentifier><delimiter>:</delimiter><userIdentifier>i</userIdentifier> <operator>+</operator> <integer>2</integer><delimiter>]</delimiter> <operator>==</operator> <string>"(*"</string><delimiter>:</delimiter>
+            <userIdentifier>concat</userIdentifier><delimiter>.</delimiter><userIdentifier>append</userIdentifier><delimiter>(</delimiter><string>''</string><delimiter>)</delimiter>
+            <userIdentifier>lastSymbol</userIdentifier><delimiter>.</delimiter><userIdentifier>append</userIdentifier><delimiter>(</delimiter><string>'*'</string><delimiter>)</delimiter>
+        <commentary># Detección del inicio de una instrucción de unión</commentary>
+        <identifier>elif</identifier> <userIdentifier>line</userIdentifier><delimiter>[</delimiter><userIdentifier>i</userIdentifier><delimiter>:</delimiter><userIdentifier>i</userIdentifier> <operator>+</operator> <integer>2</integer><delimiter>]</delimiter> <operator>==</operator> <string>"(+"</string><delimiter>:</delimiter>
+            <userIdentifier>concat</userIdentifier><delimiter>.</delimiter><userIdentifier>append</userIdentifier><delimiter>(</delimiter><string>'|'</string><delimiter>)</delimiter>
+            <userIdentifier>lastSymbol</userIdentifier><delimiter>.</delimiter><userIdentifier>append</userIdentifier><delimiter>(</delimiter><string>')'</string><delimiter>)</delimiter>
+            <userIdentifier>result</userIdentifier><delimiter>+=</delimiter> <string>'('</string>
+        <commentary># Detección del inicio de una instrucción de cerradura donde debe aparecer al menos una vez el argumento</commentary>
+        <identifier>elif</identifier> <userIdentifier>line</userIdentifier><delimiter>[</delimiter><userIdentifier>i</userIdentifier><delimiter>:</delimiter><userIdentifier>i</userIdentifier> <operator>+</operator> <integer>2</integer><delimiter>]</delimiter> <operator>==</operator> <string>"(#"</string><delimiter>:</delimiter>
+            <userIdentifier>concat</userIdentifier><delimiter>.</delimiter><userIdentifier>append</userIdentifier><delimiter>(</delimiter><string>''</string><delimiter>)</delimiter>
+            <userIdentifier>lastSymbol</userIdentifier><delimiter>.</delimiter><userIdentifier>append</userIdentifier><delimiter>(</delimiter><string>'+'</string><delimiter>)</delimiter>
+        <commentary># Detección de espacios en blanco entre instrucciones anidadas</commentary>
+        <identifier>elif</identifier> <userIdentifier>line</userIdentifier><delimiter>[</delimiter><userIdentifier>i</userIdentifier><delimiter>]</delimiter> <operator>==</operator> <string>" "</string> <identifier>and</identifier> <userIdentifier>line</userIdentifier><delimiter>[</delimiter><userIdentifier>i</userIdentifier> <operator>-</operator> <integer>2</integer><delimiter>:</delimiter><userIdentifier>i</userIdentifier><delimiter>]</delimiter> <identifier>in</identifier> <delimiter>[</delimiter><string>"(*"</string><delimiter>,</delimiter> <string>'(.'</string><delimiter>,</delimiter> <string>'(#'</string><delimiter>,</delimiter> <string>'(+'</string><delimiter>]</delimiter><delimiter>:</delimiter>
+            <userIdentifier>result</userIdentifier> <delimiter>+=</delimiter> <string>""</string>
+        <commentary># Detección de cualquier otro espacio en blanco (entre agrumentos)</commentary>
+        <identifier>elif</identifier> <userIdentifier>line</userIdentifier><delimiter>[</delimiter><userIdentifier>i</userIdentifier><delimiter>]</delimiter> <operator>==</operator> <string>" "</string><delimiter>:</delimiter>
+            <identifier>if</identifier> <userIdentifier>line</userIdentifier><delimiter>[</delimiter><userIdentifier>i</userIdentifier><operator>+</operator><integer>1</integer><delimiter>]</delimiter> <operator>!=</operator><string>"8"</string><delimiter>:</delimiter>
+                <userIdentifier>result</userIdentifier> <delimiter>+=</delimiter> <userIdentifier>concat</userIdentifier><delimiter>[</delimiter><operator>-</operator><integer>1</integer><delimiter>]</delimiter>
+        <commentary># Agregar los argumentos</commentary>
+        <identifier>elif</identifier> <userIdentifier>line</userIdentifier><delimiter>[</delimiter><userIdentifier>i</userIdentifier> <operator>-</operator> <integer>1</integer><delimiter>:</delimiter><userIdentifier>i</userIdentifier> <operator>+</operator> <integer>1</integer><delimiter>]</delimiter> <identifier>not</identifier> <identifier>in</identifier> <delimiter>[</delimiter><string>"(*"</string><delimiter>,</delimiter> <string>'(.'</string><delimiter>,</delimiter> <string>'(#'</string><delimiter>,</delimiter> <string>'(+'</string><delimiter>]</delimiter><delimiter>:</delimiter>
+            <identifier>if</identifier><delimiter>(</delimiter><userIdentifier>line</userIdentifier><delimiter>[</delimiter><userIdentifier>i</userIdentifier><delimiter>]</delimiter> <operator>==</operator> <string>'$'</string><delimiter>)</delimiter><delimiter>:</delimiter>
+                <userIdentifier>result</userIdentifier> <delimiter>=</delimiter> <userIdentifier>result</userIdentifier> <operator>+</operator> <string>'.*'</string>
+            <identifier>elif</identifier> <delimiter>(</delimiter><userIdentifier>line</userIdentifier><delimiter>[</delimiter><userIdentifier>i</userIdentifier><delimiter>]</delimiter> <operator>==</operator> <string>'8'</string><delimiter>)</delimiter><delimiter>:</delimiter>
+                <userIdentifier>lastSymbol</userIdentifier><delimiter>.</delimiter><userIdentifier>pop</userIdentifier><delimiter>(</delimiter><delimiter>)</delimiter>
+                <userIdentifier>lastSymbol</userIdentifier><delimiter>.</delimiter><userIdentifier>append</userIdentifier><delimiter>(</delimiter><string>')?'</string><delimiter>)</delimiter>
+            <identifier>else</identifier><delimiter>:</delimiter>
+                <userIdentifier>result</userIdentifier> <delimiter>=</delimiter> <userIdentifier>result</userIdentifier> <operator>+</operator> <userIdentifier>line</userIdentifier><delimiter>[</delimiter><userIdentifier>i</userIdentifier><delimiter>]</delimiter>
+
+    <identifier>return</identifier> <userIdentifier>result</userIdentifier>
+
+
+<identifier>def</identifier> <userIdentifier>expressionsFile</userIdentifier><delimiter>(</delimiter><userIdentifier>sExpressions</userIdentifier><delimiter>)</delimiter><delimiter>:</delimiter>
+    <commentary>#global labels</commentary>
+    <commentary>#global regexps</commentary>
+    <commentary># Documento donde se guardan los equivalentes de las expresiones s a expresiones regulares de python</commentary>
+    <userIdentifier>exprRegDoc</userIdentifier> <delimiter>=</delimiter> <userIdentifier>open</userIdentifier><delimiter>(</delimiter><string>'expresionesresultantes.txt'</string><delimiter>,</delimiter><string>'w'</string><delimiter>)</delimiter>
+
+    <commentary># Diccionario donde las llaves son los identificadores de cada expresión regular y los valores</commentary>
+    <commentary># la expresión regular como tal</commentary>
+    <userIdentifier>regexpsDic</userIdentifier> <delimiter>=</delimiter> <delimiter>{</delimiter><delimiter>}</delimiter>
+
+    <commentary># Lectura del documento con las expresiones s</commentary>
+    <userIdentifier>text</userIdentifier> <delimiter>=</delimiter> <userIdentifier>open</userIdentifier><delimiter>(</delimiter><userIdentifier>sExpressions</userIdentifier><delimiter>,</delimiter> <string>'r'</string><delimiter>)</delimiter>
+
+    <commentary># Iterar línea por línea</commentary>
+    <identifier>for</identifier> <userIdentifier>line</userIdentifier> <identifier>in</identifier> <userIdentifier>text</userIdentifier><delimiter>:</delimiter>
+        <userIdentifier>firstime</userIdentifier> <delimiter>=</delimiter> <identifier>True</identifier>
+        <userIdentifier>key</userIdentifier> <delimiter>=</delimiter> <string>""</string>
+        
+        <commentary># Quitar saltos de línea y dobles espacios</commentary>
+        <userIdentifier>line</userIdentifier> <delimiter>=</delimiter> <userIdentifier>line</userIdentifier><delimiter>.</delimiter><userIdentifier>replace</userIdentifier><delimiter>(</delimiter><string>"\n"</string><delimiter>,</delimiter> <string>""</string><delimiter>)</delimiter>
+        <userIdentifier>line</userIdentifier> <delimiter>=</delimiter> <userIdentifier>line</userIdentifier><delimiter>.</delimiter><userIdentifier>replace</userIdentifier><delimiter>(</delimiter><string>"  "</string><delimiter>,</delimiter><string>" "</string><delimiter>)</delimiter>
+        
+        <commentary># Iterar caracter por caracter</commentary>
+        <identifier>for</identifier> <userIdentifier>i</userIdentifier> <identifier>in</identifier> <userIdentifier>range</userIdentifier><delimiter>(</delimiter><integer>0</integer><delimiter>,</delimiter> <userIdentifier>len</userIdentifier><delimiter>(</delimiter><userIdentifier>line</userIdentifier><delimiter>)</delimiter><delimiter>)</delimiter><delimiter>:</delimiter>
+            
+            <commentary># Identidicar el fin de la etiqueta</commentary>
+            <identifier>if</identifier> <userIdentifier>line</userIdentifier><delimiter>[</delimiter><userIdentifier>i</userIdentifier><delimiter>]</delimiter> <operator>==</operator> <string>":"</string> <identifier>and</identifier> <userIdentifier>firstime</userIdentifier><delimiter>:</delimiter>
+                
+                <commentary># Volver la eqtiqueta una llave</commentary>
+                <userIdentifier>key</userIdentifier> <delimiter>=</delimiter> <userIdentifier>line</userIdentifier><delimiter>[</delimiter><integer>0</integer><delimiter>:</delimiter><userIdentifier>i</userIdentifier><delimiter>]</delimiter>
+                
+                <commentary># Usar createPatterns para extraer la expresión regular y guardarla en el diccionario</commentary>
+                <userIdentifier>regexpsDic</userIdentifier><delimiter>[</delimiter><userIdentifier>key</userIdentifier><delimiter>]</delimiter> <delimiter>=</delimiter> <userIdentifier>createPatterns</userIdentifier><delimiter>(</delimiter><userIdentifier>line</userIdentifier><delimiter>[</delimiter><userIdentifier>i</userIdentifier> <operator>+</operator> <integer>2</integer><delimiter>:</delimiter><delimiter>]</delimiter><delimiter>)</delimiter>
+                <userIdentifier>exprRegDoc</userIdentifier><delimiter>.</delimiter><userIdentifier>write</userIdentifier><delimiter>(</delimiter><userIdentifier>key</userIdentifier> <operator>+</operator> <string>': '</string><operator>+</operator> <userIdentifier>regexpsDic</userIdentifier><delimiter>[</delimiter><userIdentifier>key</userIdentifier><delimiter>]</delimiter> <operator>+</operator> <string>'\n'</string><delimiter>)</delimiter>
+                <identifier>break</identifier>
+
+    <userIdentifier>text</userIdentifier><delimiter>.</delimiter><userIdentifier>close</userIdentifier><delimiter>(</delimiter><delimiter>)</delimiter>
+    
+    <commentary># Crear lista con etiquetas</commentary>
+    <userIdentifier>labels</userIdentifier> <delimiter>=</delimiter> <userIdentifier>list</userIdentifier><delimiter>(</delimiter><userIdentifier>regexpsDic</userIdentifier><delimiter>.</delimiter><userIdentifier>keys</userIdentifier><delimiter>(</delimiter><delimiter>)</delimiter><delimiter>)</delimiter>
+    
+    <commentary># Crear lista con expresiones regulares</commentary>
+    <userIdentifier>regexps</userIdentifier> <delimiter>=</delimiter> <userIdentifier>list</userIdentifier><delimiter>(</delimiter><userIdentifier>regexpsDic</userIdentifier><delimiter>.</delimiter><userIdentifier>values</userIdentifier><delimiter>(</delimiter><delimiter>)</delimiter><delimiter>)</delimiter>
+    
+    <identifier>return</identifier> <delimiter>[</delimiter><userIdentifier>labels</userIdentifier><delimiter>,</delimiter><userIdentifier>regexps</userIdentifier><delimiter>]</delimiter>
+     
+    
+
+<identifier>def</identifier> <userIdentifier>textHighlighter</userIdentifier><delimiter>(</delimiter><userIdentifier>labels</userIdentifier><delimiter>,</delimiter> <userIdentifier>regexps</userIdentifier><delimiter>,</delimiter> <userIdentifier>codeFile</userIdentifier><delimiter>,</delimiter> <userIdentifier>htmlName</userIdentifier><delimiter>)</delimiter><delimiter>:</delimiter><commentary># sExpressions = "../expresionesS.txt"):</commentary>
+    <string>"""
+    Recibe un documento txt "sExpressions" con expresiones s que describen las categorías léxicas de un lenguaje
+    de programación y un documento "codeFile" con el código a analizar.
+    Como resultado, la función crea un documento "Resultado.html" donde escribe el código de "codeFile"
+    coloreando cada elemento perteneciente a una categoría léxica de un color diferente.
+    """</string>
+    
+
+    <commentary># Crear archivo html donde se va a guardar el resultado</commentary>
+    <userIdentifier>f</userIdentifier> <delimiter>=</delimiter> <userIdentifier>open</userIdentifier><delimiter>(</delimiter><userIdentifier>htmlName</userIdentifier><delimiter>,</delimiter> <string>'w'</string><delimiter>,</delimiter> <userIdentifier>encoding</userIdentifier> <delimiter>=</delimiter> <string>'utf8'</string><delimiter>)</delimiter>
+    
+    <commentary># Establecer un template</commentary>
+    <userIdentifier>html_template</userIdentifier> <delimiter>=</delimiter> <string>"""
+    <html>
+    <head>
+        <link rel="stylesheet" href="../estilos.css">
+    </head>
+    <body>
+    <p><pre>"""</string>
+    
+    <commentary># Abrir archivo con código a analizar</commentary>
+    <userIdentifier>code</userIdentifier> <delimiter>=</delimiter> <userIdentifier>open</userIdentifier><delimiter>(</delimiter><userIdentifier>codeFile</userIdentifier><delimiter>,</delimiter><string>'r'</string><delimiter>,</delimiter> <userIdentifier>encoding</userIdentifier> <delimiter>=</delimiter> <string>'utf8'</string><delimiter>)</delimiter>
+    
+    <commentary># Lista donde se guardarán strings procedentes de la segmentación del archivo con código de python</commentary>
+    <userIdentifier>listSegmentation</userIdentifier> <delimiter>=</delimiter> <delimiter>[</delimiter><string>""</string><delimiter>]</delimiter>
+    
+    <commentary># Variable auxiliar para la detección de strings, cuenta las comillas vistas</commentary>
+    <userIdentifier>quotationMCounter</userIdentifier> <delimiter>=</delimiter> <integer>0</integer>
+    
+    <commentary># Variable auxiliar para la detección de comentarios</commentary>
+    <userIdentifier>comment</userIdentifier> <delimiter>=</delimiter> <identifier>False</identifier>
+    
+    <commentary># Variable que permite detectar si un string o comentario empieza y termina con</commentary>
+    <commentary># el mismo tipo de comilla</commentary>
+    <userIdentifier>actualQuotationMark</userIdentifier> <delimiter>=</delimiter> <string>""</string>
+    
+    <commentary># Variable que me permite determinar si el último elemento de la lista</commentary>
+    <commentary># concatenado con el caracter actual satisface alguna expresión regular establecida</commentary>
+    <userIdentifier>matchwithprevious</userIdentifier> <delimiter>=</delimiter> <identifier>None</identifier>
+    
+    <commentary># Variable que permite deterctar strings sin separación de delimitadores u operadores</commentary>
+    <userIdentifier>delimiter</userIdentifier> <delimiter>=</delimiter> <identifier>False</identifier>
+    
+    <commentary># Iterar línea por línea</commentary>
+    <identifier>for</identifier> <userIdentifier>line</userIdentifier> <identifier>in</identifier> <userIdentifier>code</userIdentifier><delimiter>:</delimiter>
+        <userIdentifier>print</userIdentifier><delimiter>(</delimiter><userIdentifier>line</userIdentifier><delimiter>)</delimiter>
+        <commentary># Variable auxiliar para la detección de strings</commentary>
+        <userIdentifier>string</userIdentifier> <delimiter>=</delimiter> <identifier>False</identifier>
+        
+        <commentary># Procesar caracter por caracter</commentary>
+        <identifier>for</identifier> <userIdentifier>character</userIdentifier> <identifier>in</identifier> <userIdentifier>range</userIdentifier><delimiter>(</delimiter><integer>0</integer><delimiter>,</delimiter><userIdentifier>len</userIdentifier><delimiter>(</delimiter><userIdentifier>line</userIdentifier><delimiter>)</delimiter><delimiter>)</delimiter><delimiter>:</delimiter>
+            
+            
+            <commentary># Al detectar el final de un string sencillo</commentary>
+            <identifier>if</identifier> <delimiter>(</delimiter><delimiter>(</delimiter><userIdentifier>line</userIdentifier><delimiter>[</delimiter><userIdentifier>character</userIdentifier><delimiter>]</delimiter> <operator>==</operator> <string>'"'</string><delimiter>)</delimiter> <identifier>or</identifier> <delimiter>(</delimiter><userIdentifier>line</userIdentifier><delimiter>[</delimiter><userIdentifier>character</userIdentifier><delimiter>]</delimiter> <operator>==</operator> <string>"'"</string><delimiter>)</delimiter><delimiter>)</delimiter> <identifier>and</identifier> <userIdentifier>string</userIdentifier> <identifier>and</identifier> <delimiter>(</delimiter><userIdentifier>line</userIdentifier><delimiter>[</delimiter><userIdentifier>character</userIdentifier><delimiter>]</delimiter> <operator>==</operator> <userIdentifier>actualQuotationMark</userIdentifier><delimiter>)</delimiter><delimiter>:</delimiter>
+                
+                <userIdentifier>listSegmentation</userIdentifier><delimiter>[</delimiter><operator>-</operator><integer>1</integer><delimiter>]</delimiter> <delimiter>+=</delimiter> <userIdentifier>line</userIdentifier><delimiter>[</delimiter><userIdentifier>character</userIdentifier><delimiter>]</delimiter>
+                <userIdentifier>string</userIdentifier> <delimiter>=</delimiter> <identifier>False</identifier>
+                <userIdentifier>actualQuotationMark</userIdentifier> <delimiter>=</delimiter> <string>""</string>
+                
+            <commentary># Al detectar una comilla por primera vez determinar si es un string normal o multi-línea</commentary>
+            <identifier>elif</identifier> <delimiter>(</delimiter><delimiter>(</delimiter><userIdentifier>line</userIdentifier><delimiter>[</delimiter><userIdentifier>character</userIdentifier><delimiter>]</delimiter> <operator>==</operator> <string>'"'</string><delimiter>)</delimiter> <identifier>or</identifier> <delimiter>(</delimiter><userIdentifier>line</userIdentifier><delimiter>[</delimiter><userIdentifier>character</userIdentifier><delimiter>]</delimiter> <operator>==</operator> <string>"'"</string><delimiter>)</delimiter><delimiter>)</delimiter> <identifier>and</identifier> <delimiter>(</delimiter><identifier>not</identifier> <userIdentifier>comment</userIdentifier><delimiter>)</delimiter> <identifier>and</identifier> <delimiter>(</delimiter><userIdentifier>matchwithprevious</userIdentifier> <identifier>is</identifier> <identifier>None</identifier> <identifier>or</identifier> <userIdentifier>delimiter</userIdentifier><delimiter>)</delimiter> <identifier>and</identifier> <identifier>not</identifier> <userIdentifier>string</userIdentifier><delimiter>:</delimiter>
+                <userIdentifier>delimiter</userIdentifier> <delimiter>=</delimiter> <identifier>False</identifier>
+                <userIdentifier>quotationMCounter</userIdentifier> <delimiter>=</delimiter> <integer>1</integer>
+                <userIdentifier>actualQuotationMark</userIdentifier> <delimiter>=</delimiter> <userIdentifier>line</userIdentifier><delimiter>[</delimiter><userIdentifier>character</userIdentifier><delimiter>]</delimiter>
+                <userIdentifier>listSegmentation</userIdentifier><delimiter>.</delimiter><userIdentifier>append</userIdentifier><delimiter>(</delimiter><userIdentifier>line</userIdentifier><delimiter>[</delimiter><userIdentifier>character</userIdentifier><delimiter>]</delimiter><delimiter>)</delimiter> 
+                 
+                <userIdentifier>consecutiveQuotMarks</userIdentifier> <delimiter>=</delimiter> <integer>0</integer>
+                <userIdentifier>seenCharaters</userIdentifier> <delimiter>=</delimiter> <integer>0</integer>
+                
+                <commentary># Checar si hay tres comillas seguidas</commentary>
+                <identifier>for</identifier> <userIdentifier>m</userIdentifier> <identifier>in</identifier> <userIdentifier>range</userIdentifier><delimiter>(</delimiter><userIdentifier>character</userIdentifier><delimiter>,</delimiter><userIdentifier>len</userIdentifier><delimiter>(</delimiter><userIdentifier>line</userIdentifier><delimiter>)</delimiter><delimiter>)</delimiter><delimiter>:</delimiter>
+                    <identifier>if</identifier>  <userIdentifier>line</userIdentifier><delimiter>[</delimiter><userIdentifier>m</userIdentifier><delimiter>]</delimiter> <operator>==</operator> <userIdentifier>actualQuotationMark</userIdentifier> <identifier>and</identifier> <userIdentifier>seenCharaters</userIdentifier> <operator><=</operator> <integer>2</integer><delimiter>:</delimiter>
+                        <userIdentifier>consecutiveQuotMarks</userIdentifier> <delimiter>+=</delimiter> <integer>1</integer>
+                    <userIdentifier>seenCharaters</userIdentifier> <delimiter>+=</delimiter> <integer>1</integer>
+                    <identifier>if</identifier> <userIdentifier>seenCharaters</userIdentifier> <operator>==</operator> <integer>3</integer><delimiter>:</delimiter>
+                        <identifier>break</identifier>
+    
+                <identifier>if</identifier> <userIdentifier>consecutiveQuotMarks</userIdentifier> <operator>==</operator> <integer>3</integer><delimiter>:</delimiter>
+                    <userIdentifier>comment</userIdentifier> <delimiter>=</delimiter> <identifier>True</identifier>
+                <identifier>else</identifier><delimiter>:</delimiter>
+                    <userIdentifier>string</userIdentifier> <delimiter>=</delimiter> <identifier>True</identifier>
+            
+            <commentary># Si detecté un string/comentario multi-línea, manejo de comillas</commentary>
+            <identifier>elif</identifier> <delimiter>(</delimiter><userIdentifier>comment</userIdentifier><delimiter>)</delimiter> <identifier>and</identifier> <delimiter>(</delimiter><delimiter>(</delimiter><userIdentifier>line</userIdentifier><delimiter>[</delimiter><userIdentifier>character</userIdentifier><delimiter>]</delimiter> <operator>==</operator> <string>'"'</string><delimiter>)</delimiter> <identifier>or</identifier> <delimiter>(</delimiter><userIdentifier>line</userIdentifier><delimiter>[</delimiter><userIdentifier>character</userIdentifier><delimiter>]</delimiter> <operator>==</operator> <string>"'"</string><delimiter>)</delimiter><delimiter>)</delimiter> <identifier>and</identifier> <delimiter>(</delimiter><userIdentifier>line</userIdentifier><delimiter>[</delimiter><userIdentifier>character</userIdentifier><delimiter>]</delimiter> <operator>==</operator> <userIdentifier>actualQuotationMark</userIdentifier><delimiter>)</delimiter><delimiter>:</delimiter>
+                <userIdentifier>listSegmentation</userIdentifier><delimiter>[</delimiter><operator>-</operator><integer>1</integer><delimiter>]</delimiter> <delimiter>+=</delimiter> <userIdentifier>line</userIdentifier><delimiter>[</delimiter><userIdentifier>character</userIdentifier><delimiter>]</delimiter>
+                
+                <commentary># Verificar si hay tres comillas seguidas (para finalizar el comentario)</commentary>
+                <userIdentifier>consecutiveQuotMarks</userIdentifier> <delimiter>=</delimiter> <integer>0</integer>
+                <userIdentifier>seenCharaters</userIdentifier> <delimiter>=</delimiter> <integer>0</integer>
+                <identifier>for</identifier> <userIdentifier>m</userIdentifier> <identifier>in</identifier> <userIdentifier>range</userIdentifier><delimiter>(</delimiter><userIdentifier>character</userIdentifier><delimiter>,</delimiter><userIdentifier>len</userIdentifier><delimiter>(</delimiter><userIdentifier>line</userIdentifier><delimiter>)</delimiter><delimiter>)</delimiter><delimiter>:</delimiter>
+                    <identifier>if</identifier>  <userIdentifier>line</userIdentifier><delimiter>[</delimiter><userIdentifier>m</userIdentifier><delimiter>]</delimiter> <operator>==</operator> <userIdentifier>actualQuotationMark</userIdentifier> <identifier>and</identifier> <userIdentifier>seenCharaters</userIdentifier> <operator><=</operator> <integer>2</integer><delimiter>:</delimiter>
+                        <userIdentifier>consecutiveQuotMarks</userIdentifier> <delimiter>+=</delimiter> <integer>1</integer>
+                    <userIdentifier>seenCharaters</userIdentifier> <delimiter>+=</delimiter> <integer>1</integer>
+                    <identifier>if</identifier> <userIdentifier>seenCharaters</userIdentifier> <operator>==</operator> <integer>3</integer><delimiter>:</delimiter>
+                        <identifier>break</identifier>
+                
+                <commentary># Agregar las primeras tres comillas</commentary>
+                <identifier>if</identifier> <userIdentifier>quotationMCounter</userIdentifier> <operator><</operator> <integer>3</integer><delimiter>:</delimiter>
+                    <userIdentifier>quotationMCounter</userIdentifier> <delimiter>+=</delimiter> <integer>1</integer>
+                <commentary># Agregar las últimas tres comillas </commentary>
+                <identifier>elif</identifier> <userIdentifier>consecutiveQuotMarks</userIdentifier> <operator>==</operator> <integer>3</integer> <identifier>or</identifier> <userIdentifier>quotationMCounter</userIdentifier> <operator>></operator> <integer>3</integer><delimiter>:</delimiter>
+                    <userIdentifier>quotationMCounter</userIdentifier> <delimiter>+=</delimiter> <integer>1</integer>
+                    <identifier>if</identifier> <userIdentifier>quotationMCounter</userIdentifier> <operator>==</operator> <integer>6</integer><delimiter>:</delimiter>
+                        <userIdentifier>quotationMCounter</userIdentifier> <delimiter>=</delimiter> <integer>0</integer>
+                        <userIdentifier>actualQuotationMark</userIdentifier> <delimiter>=</delimiter> <string>""</string>
+                        <userIdentifier>comment</userIdentifier> <delimiter>=</delimiter> <identifier>False</identifier>
+            
+            <commentary># Agregar el contenido de un string o comentario siempre que no sean las comillas que lo delimitan</commentary>
+            <identifier>elif</identifier> <userIdentifier>string</userIdentifier> <identifier>or</identifier> <userIdentifier>comment</userIdentifier><delimiter>:</delimiter>
+                <userIdentifier>listSegmentation</userIdentifier><delimiter>[</delimiter><operator>-</operator><integer>1</integer><delimiter>]</delimiter> <delimiter>+=</delimiter> <userIdentifier>line</userIdentifier><delimiter>[</delimiter><userIdentifier>character</userIdentifier><delimiter>]</delimiter>
+                
+            <commentary># Identificar cualquier otro elemento perteneciente a categorías léxicas diferentes a los strings</commentary>
+            <commentary># verificándolo con las expresiones regulares</commentary>
+            <identifier>elif</identifier> <userIdentifier>line</userIdentifier><delimiter>[</delimiter><userIdentifier>character</userIdentifier><delimiter>]</delimiter> <operator>!=</operator> <string>'\n'</string><delimiter>:</delimiter> 
+                <identifier>for</identifier> <userIdentifier>k</userIdentifier> <identifier>in</identifier> <userIdentifier>range</userIdentifier><delimiter>(</delimiter><integer>0</integer><delimiter>,</delimiter> <userIdentifier>len</userIdentifier><delimiter>(</delimiter><userIdentifier>regexps</userIdentifier><delimiter>)</delimiter><delimiter>)</delimiter><delimiter>:</delimiter>
+                    <userIdentifier>matchwithprevious</userIdentifier> <delimiter>=</delimiter> <userIdentifier>re</userIdentifier><delimiter>.</delimiter><userIdentifier>fullmatch</userIdentifier><delimiter>(</delimiter><userIdentifier>regexps</userIdentifier><delimiter>[</delimiter><userIdentifier>k</userIdentifier><delimiter>]</delimiter><delimiter>,</delimiter> <userIdentifier>listSegmentation</userIdentifier><delimiter>[</delimiter><operator>-</operator><integer>1</integer><delimiter>]</delimiter><operator>+</operator><userIdentifier>line</userIdentifier><delimiter>[</delimiter><userIdentifier>character</userIdentifier><delimiter>]</delimiter><delimiter>)</delimiter>
+                    <identifier>if</identifier> <userIdentifier>matchwithprevious</userIdentifier> <identifier>is</identifier> <identifier>not</identifier> <identifier>None</identifier><delimiter>:</delimiter>
+                        <identifier>if</identifier> <userIdentifier>labels</userIdentifier><delimiter>[</delimiter><userIdentifier>k</userIdentifier><delimiter>]</delimiter> <identifier>in</identifier> <delimiter>[</delimiter><string>'delimiter'</string><delimiter>,</delimiter><string>'operator'</string><delimiter>]</delimiter><delimiter>:</delimiter>
+                            <userIdentifier>delimiter</userIdentifier> <delimiter>=</delimiter> <identifier>True</identifier>
+                        <userIdentifier>listSegmentation</userIdentifier><delimiter>[</delimiter><operator>-</operator><integer>1</integer><delimiter>]</delimiter> <delimiter>+=</delimiter> <userIdentifier>line</userIdentifier><delimiter>[</delimiter><userIdentifier>character</userIdentifier><delimiter>]</delimiter>
+                        <identifier>break</identifier>
+            
+            <commentary># Agregar saltos de línea        </commentary>
+            <identifier>elif</identifier> <userIdentifier>line</userIdentifier><delimiter>[</delimiter><userIdentifier>character</userIdentifier><delimiter>]</delimiter> <operator>==</operator> <string>'\n'</string><delimiter>:</delimiter> 
+                <userIdentifier>listSegmentation</userIdentifier><delimiter>.</delimiter><userIdentifier>append</userIdentifier><delimiter>(</delimiter><userIdentifier>line</userIdentifier><delimiter>[</delimiter><userIdentifier>character</userIdentifier><delimiter>]</delimiter><delimiter>)</delimiter>
+
+            <commentary># Agregar caracteres que no entran en ninguna categoría léxica por si solos</commentary>
+            <identifier>if</identifier> <delimiter>(</delimiter><userIdentifier>matchwithprevious</userIdentifier> <identifier>is</identifier> <identifier>None</identifier><delimiter>)</delimiter> <identifier>and</identifier> <userIdentifier>line</userIdentifier><delimiter>[</delimiter><userIdentifier>character</userIdentifier><delimiter>]</delimiter> <identifier>not</identifier> <identifier>in</identifier> <delimiter>[</delimiter><string>"'"</string><delimiter>,</delimiter><string>'"'</string><delimiter>,</delimiter><string>'\n'</string><delimiter>]</delimiter> <identifier>and</identifier> <delimiter>(</delimiter><identifier>not</identifier> <userIdentifier>comment</userIdentifier> <identifier>and</identifier> <identifier>not</identifier> <userIdentifier>string</userIdentifier><delimiter>)</delimiter><delimiter>:</delimiter> 
+                <userIdentifier>listSegmentation</userIdentifier><delimiter>.</delimiter><userIdentifier>append</userIdentifier><delimiter>(</delimiter><userIdentifier>line</userIdentifier><delimiter>[</delimiter><userIdentifier>character</userIdentifier><delimiter>]</delimiter><delimiter>)</delimiter>
+    <userIdentifier>code</userIdentifier><delimiter>.</delimiter><userIdentifier>close</userIdentifier><delimiter>(</delimiter><delimiter>)</delimiter>
+    
+    <commentary># Iterar sobre la lista, identificar expresiones regulares y  agregarlas al template</commentary>
+    <commentary># con sus debidas labels</commentary>
+    <identifier>for</identifier> <userIdentifier>element</userIdentifier> <identifier>in</identifier> <userIdentifier>listSegmentation</userIdentifier><delimiter>:</delimiter>
+        <userIdentifier>receivedmatch</userIdentifier> <delimiter>=</delimiter> <identifier>False</identifier>
+        <identifier>for</identifier> <userIdentifier>j</userIdentifier> <identifier>in</identifier> <userIdentifier>range</userIdentifier><delimiter>(</delimiter><integer>0</integer><delimiter>,</delimiter> <userIdentifier>len</userIdentifier><delimiter>(</delimiter><userIdentifier>regexps</userIdentifier><delimiter>)</delimiter><delimiter>)</delimiter><delimiter>:</delimiter>
+            <userIdentifier>match</userIdentifier> <delimiter>=</delimiter> <userIdentifier>re</userIdentifier><delimiter>.</delimiter><userIdentifier>fullmatch</userIdentifier><delimiter>(</delimiter><userIdentifier>regexps</userIdentifier><delimiter>[</delimiter><userIdentifier>j</userIdentifier><delimiter>]</delimiter><delimiter>,</delimiter> <userIdentifier>element</userIdentifier><delimiter>)</delimiter>
+            <identifier>if</identifier> <userIdentifier>match</userIdentifier> <identifier>is</identifier> <identifier>not</identifier> <identifier>None</identifier><delimiter>:</delimiter>
+                <userIdentifier>openLabel</userIdentifier> <delimiter>=</delimiter> <string>"<"</string><operator>+</operator> <userIdentifier>labels</userIdentifier><delimiter>[</delimiter><userIdentifier>j</userIdentifier><delimiter>]</delimiter><operator>+</operator><string>">"</string>
+                <userIdentifier>closeLabel</userIdentifier> <delimiter>=</delimiter> <string>"</"</string><operator>+</operator> <userIdentifier>labels</userIdentifier><delimiter>[</delimiter><userIdentifier>j</userIdentifier><delimiter>]</delimiter><operator>+</operator><string>">"</string>
+                <userIdentifier>html_template</userIdentifier> <delimiter>=</delimiter> <userIdentifier>html_template</userIdentifier> <operator>+</operator> <userIdentifier>openLabel</userIdentifier> <operator>+</operator> <userIdentifier>element</userIdentifier> <operator>+</operator> <userIdentifier>closeLabel</userIdentifier> 
+                <userIdentifier>receivedmatch</userIdentifier> <delimiter>=</delimiter> <identifier>True</identifier>
+                <identifier>break</identifier>        
+        <identifier>if</identifier> <userIdentifier>receivedmatch</userIdentifier> <operator>==</operator> <identifier>False</identifier> <identifier>or</identifier> <userIdentifier>element</userIdentifier> <operator>==</operator> <string>" "</string><delimiter>:</delimiter>
+            <userIdentifier>html_template</userIdentifier> <delimiter>+=</delimiter> <userIdentifier>element</userIdentifier>
+    
+    <commentary># Agregar labels finales      </commentary>
+    <userIdentifier>html_template</userIdentifier> <delimiter>+=</delimiter> <string>"</pre><p></body></html>"</string>
+  
+    <commentary># Escribir template en archivo html</commentary>
+    <userIdentifier>f</userIdentifier><delimiter>.</delimiter><userIdentifier>write</userIdentifier><delimiter>(</delimiter><userIdentifier>html_template</userIdentifier><delimiter>)</delimiter>
+    
+    <commentary># Cerrar archivo html</commentary>
+    <userIdentifier>f</userIdentifier><delimiter>.</delimiter><userIdentifier>close</userIdentifier><delimiter>(</delimiter><delimiter>)</delimiter>
+    
+
+<commentary>#textHighlighter('expresionesS.txt','ejemplo.py')</commentary>
+
+</pre><p></body></html>

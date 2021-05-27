@@ -1,0 +1,84 @@
+
+    <html>
+    <head>
+        <link rel="stylesheet" href="../estilos.css">
+    </head>
+    <body>
+    <p><pre><identifier>class</identifier> <userIdentifier>Cuentahabiente</userIdentifier><delimiter>:</delimiter>
+    <identifier>def</identifier> <userIdentifier>__init__</userIdentifier><delimiter>(</delimiter><userIdentifier>self</userIdentifier><delimiter>,</delimiter> <userIdentifier>nombre</userIdentifier><delimiter>,</delimiter> <userIdentifier>rfc</userIdentifier><delimiter>,</delimiter> <userIdentifier>direccion</userIdentifier><delimiter>,</delimiter> <userIdentifier>saldo_inicial</userIdentifier><delimiter>)</delimiter><delimiter>:</delimiter>
+        <userIdentifier>self</userIdentifier><delimiter>.</delimiter><userIdentifier>__nombre</userIdentifier> <delimiter>=</delimiter> <userIdentifier>nombre</userIdentifier>
+        <userIdentifier>self</userIdentifier><delimiter>.</delimiter><userIdentifier>__rfc</userIdentifier> <delimiter>=</delimiter> <userIdentifier>rfc</userIdentifier>
+        <userIdentifier>self</userIdentifier><delimiter>.</delimiter><userIdentifier>__direccion</userIdentifier> <delimiter>=</delimiter> <userIdentifier>direccion</userIdentifier>
+        <userIdentifier>self</userIdentifier><delimiter>.</delimiter><userIdentifier>__saldo_inicial</userIdentifier> <delimiter>=</delimiter> <userIdentifier>saldo_inicial</userIdentifier>
+        <userIdentifier>self</userIdentifier><delimiter>.</delimiter><userIdentifier>__movimientos</userIdentifier> <delimiter>=</delimiter> <delimiter>[</delimiter><delimiter>]</delimiter>
+        <userIdentifier>self</userIdentifier><delimiter>.</delimiter><userIdentifier>__movimientos</userIdentifier><delimiter>.</delimiter><userIdentifier>append</userIdentifier><delimiter>(</delimiter><userIdentifier>f</userIdentifier><string>'Deposito - ${saldo_inicial:0.2f}\n'</string><delimiter>)</delimiter>
+        
+    <identifier>def</identifier> <userIdentifier>__str__</userIdentifier><delimiter>(</delimiter><userIdentifier>self</userIdentifier><delimiter>)</delimiter><delimiter>:</delimiter>
+        <identifier>return</identifier> <userIdentifier>f</userIdentifier><string>'{self.__nombre} ({self.__rfc}): ${self.__saldo_inicial:0.2f}\n'</string>
+    
+    <identifier>def</identifier> <userIdentifier>hacer_deposito</userIdentifier><delimiter>(</delimiter><userIdentifier>self</userIdentifier><delimiter>,</delimiter> <userIdentifier>cantidad</userIdentifier><delimiter>)</delimiter><delimiter>:</delimiter>
+        <userIdentifier>self</userIdentifier><delimiter>.</delimiter><userIdentifier>__saldo_inicial</userIdentifier> <delimiter>=</delimiter> <userIdentifier>self</userIdentifier><delimiter>.</delimiter><userIdentifier>__saldo_inicial</userIdentifier> <operator>+</operator> <userIdentifier>cantidad</userIdentifier>
+        <identifier>if</identifier> <userIdentifier>len</userIdentifier><delimiter>(</delimiter><userIdentifier>self</userIdentifier><delimiter>.</delimiter><userIdentifier>__movimientos</userIdentifier><delimiter>)</delimiter> <operator>==</operator> <integer>5</integer><delimiter>:</delimiter>
+            <identifier>del</identifier> <userIdentifier>self</userIdentifier><delimiter>.</delimiter><userIdentifier>__movimientos</userIdentifier><delimiter>[</delimiter><integer>0</integer><delimiter>]</delimiter>
+            <userIdentifier>self</userIdentifier><delimiter>.</delimiter><userIdentifier>__movimientos</userIdentifier><delimiter>.</delimiter><userIdentifier>append</userIdentifier><delimiter>(</delimiter><userIdentifier>f</userIdentifier><string>'Deposito - ${cantidad:0.2f}\n'</string><delimiter>)</delimiter>
+        <identifier>else</identifier><delimiter>:</delimiter>
+            <userIdentifier>self</userIdentifier><delimiter>.</delimiter><userIdentifier>__movimientos</userIdentifier><delimiter>.</delimiter><userIdentifier>append</userIdentifier><delimiter>(</delimiter><userIdentifier>f</userIdentifier><string>'Deposito - ${cantidad:0.2f}\n'</string><delimiter>)</delimiter> 
+      
+    <identifier>def</identifier> <userIdentifier>hacer_retiro</userIdentifier><delimiter>(</delimiter><userIdentifier>self</userIdentifier><delimiter>,</delimiter> <userIdentifier>cantidad</userIdentifier><delimiter>)</delimiter><delimiter>:</delimiter>
+        <identifier>if</identifier> <userIdentifier>cantidad</userIdentifier> <operator>></operator> <userIdentifier>self</userIdentifier><delimiter>.</delimiter><userIdentifier>__saldo_inicial</userIdentifier><delimiter>:</delimiter>
+            <identifier>return</identifier> <identifier>False</identifier>
+        <identifier>else</identifier><delimiter>:</delimiter>
+            <userIdentifier>self</userIdentifier><delimiter>.</delimiter><userIdentifier>__saldo_inicial</userIdentifier> <delimiter>-=</delimiter> <userIdentifier>cantidad</userIdentifier>
+            <identifier>if</identifier> <userIdentifier>len</userIdentifier><delimiter>(</delimiter><userIdentifier>self</userIdentifier><delimiter>.</delimiter><userIdentifier>__movimientos</userIdentifier><delimiter>)</delimiter> <operator>==</operator> <integer>5</integer><delimiter>:</delimiter>
+                <identifier>del</identifier> <userIdentifier>self</userIdentifier><delimiter>.</delimiter><userIdentifier>__movimientos</userIdentifier><delimiter>[</delimiter><integer>0</integer><delimiter>]</delimiter>
+                <userIdentifier>qty</userIdentifier> <delimiter>=</delimiter> <userIdentifier>f</userIdentifier><string>'- ${-cantidad:0.2f}'</string>
+                <userIdentifier>self</userIdentifier><delimiter>.</delimiter><userIdentifier>__movimientos</userIdentifier><delimiter>.</delimiter><userIdentifier>append</userIdentifier><delimiter>(</delimiter><userIdentifier>f</userIdentifier><string>'Retiro {qty:13}\n'</string><delimiter>)</delimiter>
+            <identifier>else</identifier><delimiter>:</delimiter>
+                <userIdentifier>qty</userIdentifier> <delimiter>=</delimiter> <userIdentifier>f</userIdentifier><string>'- ${-cantidad:0.2f}'</string>
+                <userIdentifier>self</userIdentifier><delimiter>.</delimiter><userIdentifier>__movimientos</userIdentifier><delimiter>.</delimiter><userIdentifier>append</userIdentifier><delimiter>(</delimiter><userIdentifier>f</userIdentifier><string>'Retiro{qty:13}\n'</string><delimiter>)</delimiter>
+                <identifier>return</identifier> <identifier>True</identifier>
+          
+    <identifier>def</identifier> <userIdentifier>hacer_transferencia</userIdentifier><delimiter>(</delimiter><userIdentifier>self</userIdentifier><delimiter>,</delimiter> <userIdentifier>cantidad</userIdentifier><delimiter>,</delimiter> <userIdentifier>destinatario</userIdentifier><delimiter>)</delimiter><delimiter>:</delimiter>
+        <identifier>if</identifier> <userIdentifier>cantidad</userIdentifier> <operator>></operator> <userIdentifier>self</userIdentifier><delimiter>.</delimiter><userIdentifier>__saldo_inicial</userIdentifier><delimiter>:</delimiter>
+            <identifier>return</identifier> <identifier>False</identifier>
+        <identifier>else</identifier><delimiter>:</delimiter>
+            <userIdentifier>destinatario</userIdentifier><delimiter>.</delimiter><userIdentifier>__saldo_inicial</userIdentifier> <delimiter>+=</delimiter> <userIdentifier>cantidad</userIdentifier>
+            <userIdentifier>self</userIdentifier><delimiter>.</delimiter><userIdentifier>__saldo_inicial</userIdentifier> <delimiter>-=</delimiter> <userIdentifier>cantidad</userIdentifier>
+            <identifier>if</identifier> <userIdentifier>len</userIdentifier><delimiter>(</delimiter><userIdentifier>self</userIdentifier><delimiter>.</delimiter><userIdentifier>__movimientos</userIdentifier><delimiter>)</delimiter> <operator>==</operator> <integer>5</integer><delimiter>:</delimiter>
+                <identifier>del</identifier> <userIdentifier>self</userIdentifier><delimiter>.</delimiter><userIdentifier>__movimientos</userIdentifier><delimiter>[</delimiter><integer>0</integer><delimiter>]</delimiter>
+                <userIdentifier>self</userIdentifier><delimiter>.</delimiter><userIdentifier>__movimientos</userIdentifier><delimiter>.</delimiter><userIdentifier>append</userIdentifier><delimiter>(</delimiter><userIdentifier>f</userIdentifier><string>'Transferencia - ${-cantidad:0.2f}\n'</string><delimiter>)</delimiter>
+                <userIdentifier>destinatario</userIdentifier><delimiter>.</delimiter><userIdentifier>__movimientos</userIdentifier><delimiter>.</delimiter><userIdentifier>append</userIdentifier><delimiter>(</delimiter><userIdentifier>f</userIdentifier><string>'Transferencia - ${cantidad:0.2f}\n'</string><delimiter>)</delimiter>
+            <identifier>else</identifier><delimiter>:</delimiter>
+                <userIdentifier>self</userIdentifier><delimiter>.</delimiter><userIdentifier>__movimientos</userIdentifier><delimiter>.</delimiter><userIdentifier>append</userIdentifier><delimiter>(</delimiter><userIdentifier>f</userIdentifier><string>'Transferencia - ${-cantidad:0.2f}\n'</string><delimiter>)</delimiter>
+                <userIdentifier>destinatario</userIdentifier><delimiter>.</delimiter><userIdentifier>__movimientos</userIdentifier><delimiter>.</delimiter><userIdentifier>append</userIdentifier><delimiter>(</delimiter><userIdentifier>f</userIdentifier><string>'Transferencia - ${cantidad:0.2f}\n'</string><delimiter>)</delimiter>
+              
+            <identifier>return</identifier> <identifier>True</identifier>
+            
+    <delimiter>@</delimiter><userIdentifier>property</userIdentifier>
+    <identifier>def</identifier> <userIdentifier>consultar_saldo</userIdentifier><delimiter>(</delimiter><userIdentifier>self</userIdentifier><delimiter>)</delimiter><delimiter>:</delimiter>
+        <identifier>return</identifier> <userIdentifier>self</userIdentifier><delimiter>.</delimiter><userIdentifier>__saldo_inicial</userIdentifier>
+    
+    <identifier>def</identifier> <userIdentifier>ver_movimientos</userIdentifier><delimiter>(</delimiter><userIdentifier>self</userIdentifier><delimiter>)</delimiter><delimiter>:</delimiter>
+        <userIdentifier>mov_print</userIdentifier><delimiter>=</delimiter> <string>''</string>
+        <identifier>for</identifier> <userIdentifier>movimiento</userIdentifier> <identifier>in</identifier> <userIdentifier>self</userIdentifier><delimiter>.</delimiter><userIdentifier>__movimientos</userIdentifier><delimiter>:</delimiter>
+            <userIdentifier>mov_print</userIdentifier> <delimiter>+=</delimiter> <userIdentifier>movimiento</userIdentifier>
+        <identifier>return</identifier> <userIdentifier>mov_print</userIdentifier>
+
+
+<identifier>if</identifier> <userIdentifier>__name__</userIdentifier> <operator>==</operator> <string>'__main__'</string><delimiter>:</delimiter>
+    <userIdentifier>c1</userIdentifier> <delimiter>=</delimiter> <userIdentifier>Cuentahabiente</userIdentifier><delimiter>(</delimiter><string>'Rico McPato'</string><delimiter>,</delimiter> <string>'RCMCPT01C'</string><delimiter>,</delimiter> <string>'Duckburg'</string><delimiter>,</delimiter> <integer>0</integer><float>.10</float><delimiter>)</delimiter>
+    <userIdentifier>c2</userIdentifier> <delimiter>=</delimiter> <userIdentifier>Cuentahabiente</userIdentifier><delimiter>(</delimiter><string>'Bruce Wayne'</string><delimiter>,</delimiter> <string>'DC2739'</string><delimiter>,</delimiter> <string>'Gotham'</string><delimiter>,</delimiter> <integer>1000000</integer><delimiter>)</delimiter>
+    <identifier>for</identifier> <userIdentifier>g</userIdentifier> <identifier>in</identifier> <userIdentifier>range</userIdentifier><delimiter>(</delimiter><integer>10</integer><delimiter>,</delimiter> <integer>1000000</integer><delimiter>,</delimiter> <integer>1000</integer><delimiter>)</delimiter><delimiter>:</delimiter>
+        <userIdentifier>c1</userIdentifier><delimiter>.</delimiter><userIdentifier>hacer_deposito</userIdentifier><delimiter>(</delimiter><userIdentifier>g</userIdentifier><delimiter>)</delimiter>
+    <userIdentifier>c1</userIdentifier><delimiter>.</delimiter><userIdentifier>hacer_retiro</userIdentifier><delimiter>(</delimiter><integer>5000</integer><delimiter>)</delimiter>
+    <userIdentifier>c1</userIdentifier><delimiter>.</delimiter><userIdentifier>hacer_transferencia</userIdentifier><delimiter>(</delimiter><integer>25000</integer><delimiter>,</delimiter> <userIdentifier>c2</userIdentifier><delimiter>)</delimiter>
+    <userIdentifier>print</userIdentifier><delimiter>(</delimiter><userIdentifier>c1</userIdentifier><delimiter>)</delimiter>
+    <userIdentifier>print</userIdentifier><delimiter>(</delimiter><userIdentifier>c1</userIdentifier><delimiter>.</delimiter><userIdentifier>ver_movimientos</userIdentifier><delimiter>(</delimiter><delimiter>)</delimiter><delimiter>)</delimiter>
+    <userIdentifier>print</userIdentifier><delimiter>(</delimiter><userIdentifier>c2</userIdentifier><delimiter>)</delimiter>
+    <userIdentifier>print</userIdentifier><delimiter>(</delimiter><userIdentifier>c2</userIdentifier><delimiter>.</delimiter><userIdentifier>ver_movimientos</userIdentifier><delimiter>(</delimiter><delimiter>)</delimiter><delimiter>)</delimiter>
+
+
+    
+  
+  
+</pre><p></body></html>

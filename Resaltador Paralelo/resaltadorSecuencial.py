@@ -1,5 +1,6 @@
 import ResaltadorTexto
 import os
+import time
 
 
 files = [] # directorios de los códigos
@@ -24,15 +25,20 @@ def findFiles(directory):
         
 #textHighlighter('expresionesS.txt','ejemplo.py', 'nombre del html') 
 findFiles(os.getcwd())
-print(files)
 # regresar a dir anterior os.chdir(os.path.dirname(os.getcwd()))
 #>>> os.mkdir('Christmas Photos')
 
-def main(directory):
+def main(directory,sExpressions):
+    data = ResaltadorTexto.expressionsFile(sExpressions)
     findFiles(directory)
     os.mkdir('Resultados')
     os.chdir('Resultados')    
     for file in files:
-        ResaltadorTexto.textHighlighter('../expresionesS.txt',file, nameHTML(file))
-        
-main(os.getcwd())
+        ResaltadorTexto.textHighlighter(data[0],data[1], file, nameHTML(file))
+
+
+      
+startTime = time.time()
+main(os.getcwd(),'expresionesS.txt')
+finishTime = time.time() - startTime
+print('Tiempo de Ejecución: '+ str(finishTime))

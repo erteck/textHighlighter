@@ -1,6 +1,7 @@
 # ESTE ES EL BUENO
 import re
 
+
 def main(archivo):
     patrones = {}
     fpatters = open(archivo,'r')

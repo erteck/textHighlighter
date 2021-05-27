@@ -1,0 +1,18 @@
+
+    <html>
+    <head>
+        <link rel="stylesheet" href="../estilos.css">
+    </head>
+    <body>
+    <p><pre><identifier>from</identifier> <userIdentifier>playsound</userIdentifier> <identifier>import</identifier> <userIdentifier>playsound</userIdentifier>
+<identifier>from</identifier> <userIdentifier>instrumento</userIdentifier> <identifier>import</identifier> <userIdentifier>Instrumento</userIdentifier>
+
+<identifier>class</identifier> <userIdentifier>Violin</userIdentifier><delimiter>(</delimiter><userIdentifier>Instrumento</userIdentifier><delimiter>)</delimiter><delimiter>:</delimiter>
+    
+    <identifier>def</identifier> <userIdentifier>tocar</userIdentifier><delimiter>(</delimiter><userIdentifier>self</userIdentifier><delimiter>,</delimiter> <userIdentifier>mood</userIdentifier><delimiter>)</delimiter><delimiter>:</delimiter>
+        <identifier>if</identifier> <userIdentifier>mood</userIdentifier> <operator>==</operator> <string>'sad'</string><delimiter>:</delimiter>
+            <userIdentifier>print</userIdentifier><delimiter>(</delimiter><string>'El violin mas pequeño del mundo, tocando la cancion mas triste del mundo'</string><delimiter>)</delimiter>
+            <userIdentifier>playsound</userIdentifier><delimiter>(</delimiter><string>'violin-sad.mp3'</string><delimiter>)</delimiter>
+        <identifier>elif</identifier> <userIdentifier>mood</userIdentifier> <operator>==</operator> <string>'energetic'</string><delimiter>:</delimiter>
+            <userIdentifier>print</userIdentifier><delimiter>(</delimiter><string>'Tocando feliz con mi violin'</string><delimiter>)</delimiter>
+            <userIdentifier>playsound</userIdentifier><delimiter>(</delimiter><string>'violin-happy.mp3'</string><delimiter>)</delimiter></pre><p></body></html>

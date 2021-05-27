@@ -1,0 +1,298 @@
+
+    <html>
+    <head>
+        <link rel="stylesheet" href="../estilos.css">
+    </head>
+    <body>
+    <p><pre><string>"""
+Menú principal y vistas referentes a los datos tomados por la estación de datos biométricos.
+Autores:
+Erick Alberto Bustos Cruz
+Daniela Avila Luna
+"""</string>
+
+
+<identifier>import</identifier> <userIdentifier>numpy</userIdentifier> <identifier>as</identifier> <userIdentifier>np</userIdentifier>
+<identifier>import</identifier> <userIdentifier>pandas</userIdentifier> <identifier>as</identifier> <userIdentifier>pd</userIdentifier>
+<identifier>import</identifier> <userIdentifier>matplotlib</userIdentifier><delimiter>.</delimiter><userIdentifier>pyplot</userIdentifier> <identifier>as</identifier> <userIdentifier>plt</userIdentifier>
+<identifier>from</identifier> <userIdentifier>os</userIdentifier> <identifier>import</identifier> <userIdentifier>system</userIdentifier><delimiter>,</delimiter> <userIdentifier>name</userIdentifier>
+<identifier>import</identifier> <userIdentifier>sys</userIdentifier>
+<identifier>import</identifier> <userIdentifier>mysql</userIdentifier><delimiter>.</delimiter><userIdentifier>connector</userIdentifier>
+<identifier>from</identifier> <userIdentifier>statistics</userIdentifier> <identifier>import</identifier> <userIdentifier>mean</userIdentifier> 
+
+
+<identifier>def</identifier> <userIdentifier>conexion_sql</userIdentifier><delimiter>(</delimiter><delimiter>)</delimiter><delimiter>:</delimiter>
+    <userIdentifier>conexion</userIdentifier><delimiter>=</delimiter><userIdentifier>mysql</userIdentifier><delimiter>.</delimiter><userIdentifier>connector</userIdentifier><delimiter>.</delimiter><userIdentifier>connect</userIdentifier><delimiter>(</delimiter><userIdentifier>host</userIdentifier><delimiter>=</delimiter><string>"localhost"</string><delimiter>,</delimiter>
+                                  <userIdentifier>user</userIdentifier><delimiter>=</delimiter><string>"-"</string><delimiter>,</delimiter>
+                                  <userIdentifier>passwd</userIdentifier><delimiter>=</delimiter><string>"-"</string><delimiter>,</delimiter>
+                                  <userIdentifier>database</userIdentifier><delimiter>=</delimiter><string>"-"</string><delimiter>)</delimiter>
+    <identifier>return</identifier> <userIdentifier>conexion</userIdentifier>
+
+
+<identifier>def</identifier> <userIdentifier>clear</userIdentifier><delimiter>(</delimiter><delimiter>)</delimiter><delimiter>:</delimiter>
+    <identifier>if</identifier> <userIdentifier>name</userIdentifier> <operator>==</operator> <string>'nt'</string><delimiter>:</delimiter>
+        <userIdentifier>s</userIdentifier> <delimiter>=</delimiter> <userIdentifier>system</userIdentifier><delimiter>(</delimiter><string>'cls'</string><delimiter>)</delimiter>
+        
+<identifier>def</identifier> <userIdentifier>opcion0</userIdentifier><delimiter>(</delimiter><userIdentifier>cursor</userIdentifier><delimiter>,</delimiter><userIdentifier>conexion</userIdentifier><delimiter>)</delimiter><delimiter>:</delimiter>
+    <string>"""
+    Opción para tomar las mediciones del día. Se preguntan apellidos, nombre, edad, sexo 
+    y una serie de datos cualitativos que pueden ser indicadores del COVID-19. Se busca a la persona en 
+    la base de datos y se crea un nuevo registro de sus mediciones con la fecha actual. Después de 
+    seleccionar esta opción la persona debe utilizar la estación de toma de datos
+    biométricos para mandar los datos cuantitativos.
+    """</string>
+    <identifier>try</identifier><delimiter>:</delimiter>
+        <userIdentifier>clear</userIdentifier><delimiter>(</delimiter><delimiter>)</delimiter>
+        <userIdentifier>print</userIdentifier><delimiter>(</delimiter><string>"\nMIS MEDICIONES DE HOY"</string><delimiter>)</delimiter>
+        <userIdentifier>print</userIdentifier><delimiter>(</delimiter><string>"\nIngrese sus datos:"</string><delimiter>)</delimiter>
+        <userIdentifier>apellidos</userIdentifier> <delimiter>=</delimiter> <userIdentifier>input</userIdentifier><delimiter>(</delimiter><string>"Ingresa tus apellidos: "</string><delimiter>)</delimiter>
+        <userIdentifier>nombres</userIdentifier> <delimiter>=</delimiter> <userIdentifier>input</userIdentifier><delimiter>(</delimiter><string>"Ingresa tu nombre(s): "</string><delimiter>)</delimiter>
+
+        <userIdentifier>edad</userIdentifier> <delimiter>=</delimiter> <userIdentifier>input</userIdentifier><delimiter>(</delimiter><string>"Ingresa tu edad: "</string><delimiter>)</delimiter>
+        <userIdentifier>sexo</userIdentifier> <delimiter>=</delimiter> <userIdentifier>input</userIdentifier><delimiter>(</delimiter><string>"Ingresa tu sexo [M para masculino, F para femenino, O para otro]: "</string><delimiter>)</delimiter>
+        <userIdentifier>CP</userIdentifier> <delimiter>=</delimiter> <userIdentifier>input</userIdentifier><delimiter>(</delimiter><string>"Ingrese el código postal del lugar donde se encuentra: "</string><delimiter>)</delimiter>
+        <userIdentifier>print</userIdentifier><delimiter>(</delimiter><string>"\nEn la última semana ..."</string><delimiter>)</delimiter>
+        <userIdentifier>congestion_nasal</userIdentifier> <delimiter>=</delimiter> <userIdentifier>input</userIdentifier><delimiter>(</delimiter><string>"¿Ha tenido congestion nasal? Ingrese si/no: "</string><delimiter>)</delimiter>
+        <userIdentifier>dolor_cabeza</userIdentifier> <delimiter>=</delimiter> <userIdentifier>input</userIdentifier><delimiter>(</delimiter><string>"¿Ha tenido dolor de cabeza? Ingrese si/no: "</string><delimiter>)</delimiter>
+        <userIdentifier>tos_seca</userIdentifier> <delimiter>=</delimiter> <userIdentifier>input</userIdentifier><delimiter>(</delimiter><string>"¿Ha tenido tos seca? Ingrese si/no: "</string><delimiter>)</delimiter>
+        <userIdentifier>cansancio</userIdentifier> <delimiter>=</delimiter> <userIdentifier>input</userIdentifier><delimiter>(</delimiter><string>"¿Ha sentido cansancio fuera de lo normal? Ingrese si/no: "</string><delimiter>)</delimiter>
+        <identifier>if</identifier><delimiter>(</delimiter><userIdentifier>sexo</userIdentifier><delimiter>.</delimiter><userIdentifier>lower</userIdentifier><delimiter>(</delimiter><delimiter>)</delimiter> <identifier>in</identifier> <delimiter>[</delimiter><string>'m'</string><delimiter>,</delimiter><string>'hombre'</string><delimiter>]</delimiter><delimiter>)</delimiter><delimiter>:</delimiter>
+            <userIdentifier>sexo</userIdentifier> <delimiter>=</delimiter> <string>'masculino'</string>
+        <identifier>elif</identifier><delimiter>(</delimiter><userIdentifier>sexo</userIdentifier><delimiter>.</delimiter><userIdentifier>lower</userIdentifier><delimiter>(</delimiter><delimiter>)</delimiter> <identifier>in</identifier> <delimiter>[</delimiter><string>'f'</string><delimiter>,</delimiter><string>'mujer'</string><delimiter>]</delimiter><delimiter>)</delimiter><delimiter>:</delimiter>
+            <userIdentifier>sexo</userIdentifier> <delimiter>=</delimiter> <string>'femenino'</string>
+        <identifier>elif</identifier><delimiter>(</delimiter><userIdentifier>sexo</userIdentifier><delimiter>.</delimiter><userIdentifier>lower</userIdentifier><delimiter>(</delimiter><delimiter>)</delimiter> <identifier>in</identifier> <delimiter>[</delimiter><string>'o'</string><delimiter>,</delimiter><string>'otro'</string><delimiter>,</delimiter><string>'0'</string><delimiter>]</delimiter><delimiter>)</delimiter><delimiter>:</delimiter>
+            <userIdentifier>sexo</userIdentifier> <delimiter>=</delimiter> <string>'otro'</string>
+        <userIdentifier>query</userIdentifier> <delimiter>=</delimiter> <userIdentifier>f</userIdentifier><string>'SELECT ID_usuario FROM persona WHERE nombres = "{nombres}" AND apellidos = "{apellidos}" AND sexo = "{sexo}" AND TIMESTAMPDIFF(YEAR, persona.fecha_nacimiento,CURDATE()) = {edad}'</string>
+        <userIdentifier>cursor</userIdentifier><delimiter>.</delimiter><userIdentifier>execute</userIdentifier><delimiter>(</delimiter><userIdentifier>query</userIdentifier><delimiter>)</delimiter>
+        <userIdentifier>bd</userIdentifier> <delimiter>=</delimiter> <userIdentifier>pd</userIdentifier><delimiter>.</delimiter><userIdentifier>DataFrame</userIdentifier><delimiter>(</delimiter><userIdentifier>columns</userIdentifier> <delimiter>=</delimiter> <delimiter>[</delimiter><string>"ID_usuario"</string><delimiter>]</delimiter><delimiter>)</delimiter>
+        
+        <identifier>for</identifier> <userIdentifier>fila</userIdentifier> <identifier>in</identifier> <userIdentifier>cursor</userIdentifier><delimiter>:</delimiter>
+            <userIdentifier>bd</userIdentifier> <delimiter>=</delimiter> <userIdentifier>bd</userIdentifier><delimiter>.</delimiter><userIdentifier>append</userIdentifier><delimiter>(</delimiter><delimiter>{</delimiter><string>"ID_usuario"</string><delimiter>:</delimiter><userIdentifier>fila</userIdentifier><delimiter>[</delimiter><integer>0</integer><delimiter>]</delimiter><delimiter>}</delimiter><delimiter>,</delimiter> <userIdentifier>ignore_index</userIdentifier><delimiter>=</delimiter><identifier>True</identifier><delimiter>)</delimiter>
+        
+        <userIdentifier>ID_usuario</userIdentifier> <delimiter>=</delimiter> <userIdentifier>bd</userIdentifier><delimiter>.</delimiter><userIdentifier>iat</userIdentifier><delimiter>[</delimiter><integer>0</integer><delimiter>,</delimiter><integer>0</integer><delimiter>]</delimiter>
+        <userIdentifier>print</userIdentifier><delimiter>(</delimiter><userIdentifier>ID_usuario</userIdentifier><delimiter>)</delimiter>
+        <userIdentifier>conexion</userIdentifier><delimiter>.</delimiter><userIdentifier>close</userIdentifier><delimiter>(</delimiter><delimiter>)</delimiter>
+        
+        <userIdentifier>conexion2</userIdentifier> <delimiter>=</delimiter> <userIdentifier>conexion_sql</userIdentifier><delimiter>(</delimiter><delimiter>)</delimiter>
+        <userIdentifier>cursor2</userIdentifier> <delimiter>=</delimiter> <userIdentifier>conexion2</userIdentifier><delimiter>.</delimiter><userIdentifier>cursor</userIdentifier><delimiter>(</delimiter><delimiter>)</delimiter>
+        
+        <userIdentifier>query2</userIdentifier> <delimiter>=</delimiter> <userIdentifier>f</userIdentifier><string>'INSERT INTO datos_biometricos (ID_usuario,codigo_postal,congestion_nasal,dolor_cabeza, tos_seca,cansancio) VALUES ({ID_usuario},"{CP}","{congestion_nasal}","{dolor_cabeza}","{tos_seca}","{cansancio}")'</string>
+        <userIdentifier>cursor2</userIdentifier><delimiter>.</delimiter><userIdentifier>execute</userIdentifier><delimiter>(</delimiter><userIdentifier>query2</userIdentifier><delimiter>)</delimiter>
+        <userIdentifier>conexion2</userIdentifier><delimiter>.</delimiter><userIdentifier>commit</userIdentifier><delimiter>(</delimiter><delimiter>)</delimiter>
+        
+        
+        <userIdentifier>print</userIdentifier><delimiter>(</delimiter><string>"\nMUCHAS GRACIAS, POR FAVOR PROCEDA A TOMAR SUS MEDIDAS BIOMÉTRICAS\n"</string><delimiter>)</delimiter>
+        
+    <identifier>except</identifier><delimiter>:</delimiter>
+        <userIdentifier>print</userIdentifier><delimiter>(</delimiter><string>"\nERROR: No se pudo realizar la accion, por favor revise que hayan introducido los datos correctos.\n"</string><delimiter>)</delimiter>
+    
+
+
+<identifier>def</identifier> <userIdentifier>opcion1</userIdentifier><delimiter>(</delimiter><userIdentifier>cursor</userIdentifier><delimiter>,</delimiter> <userIdentifier>conexion</userIdentifier><delimiter>)</delimiter><delimiter>:</delimiter> 
+    <string>"""
+    Se realiza un promedio semanal de los indicadores cuantitativos y cualitativos para un cierto usuario.
+    En caso de que los datos impliquen una posible infección por COVID-19, se emite una alerta.
+    """</string>
+    <userIdentifier>clear</userIdentifier><delimiter>(</delimiter><delimiter>)</delimiter>
+    <userIdentifier>print</userIdentifier><delimiter>(</delimiter><string>"\nMI DIAGNÓSTICO"</string><delimiter>)</delimiter>
+    <commentary>#promedio de una semana</commentary>
+    <userIdentifier>nombre</userIdentifier> <delimiter>=</delimiter> <userIdentifier>input</userIdentifier><delimiter>(</delimiter><string>"Ingresa tu nombre: "</string><delimiter>)</delimiter>
+    <userIdentifier>apellido</userIdentifier> <delimiter>=</delimiter> <userIdentifier>input</userIdentifier><delimiter>(</delimiter><string>"Ingresa tus apellidos: "</string><delimiter>)</delimiter>
+    <userIdentifier>query</userIdentifier> <delimiter>=</delimiter> <userIdentifier>f</userIdentifier><string>'SELECT week(db.fecha) as "Semana", p.ID_usuario as "ID Usuario", p.nombres as "Nombre",p.apellidos as "Apellido", AVG(db.saturacion_oxigeno) as "Saturacion Oxigeno", AVG(db.ritmo_cardiaco) as "Ritmo cardiaco", AVG(db.temperatura) as "Temperatura", COUNT( CASE WHEN db.congestion_nasal = "si" THEN 1 END ) AS "Veces con congestion nasal", COUNT( CASE WHEN db.dolor_cabeza = "si" THEN 1 END ) AS "Veces con dolor de cabeza", COUNT( CASE WHEN db.tos_seca = "si" THEN 1 END ) AS "Veces con tos seca", COUNT( CASE WHEN db.cansancio = "si" THEN 1 END ) AS "Veces con cansancio" FROM datos_biometricos db, persona p WHERE db.ID_usuario = p.ID_usuario AND DATEDIFF(NOW(),db.fecha) < 15 AND p.nombres LIKE "{nombre}" AND p.apellidos LIKE "{apellido}" GROUP by week(db.fecha), p.ID_usuario'</string>
+    <userIdentifier>cursor</userIdentifier><delimiter>.</delimiter><userIdentifier>execute</userIdentifier><delimiter>(</delimiter><userIdentifier>query</userIdentifier><delimiter>)</delimiter>
+    <userIdentifier>bd</userIdentifier> <delimiter>=</delimiter> <userIdentifier>pd</userIdentifier><delimiter>.</delimiter><userIdentifier>DataFrame</userIdentifier><delimiter>(</delimiter><userIdentifier>columns</userIdentifier> <delimiter>=</delimiter> <delimiter>[</delimiter><string>"Semana"</string><delimiter>,</delimiter> <string>"ID_Usuario"</string><delimiter>,</delimiter> <string>"Nombre"</string><delimiter>,</delimiter> <string>"Apellido"</string><delimiter>,</delimiter> <string>"Promedio Saturacion Oxigeno"</string><delimiter>,</delimiter> <string>"Promedio Ritmo Cardiaco"</string><delimiter>,</delimiter> <string>"Promedio Temperatura"</string><delimiter>,</delimiter> <string>"Veces con congestion nasal"</string><delimiter>,</delimiter> <string>"Veces con dolor de cabeza"</string><delimiter>,</delimiter> <string>"Veces con tos seca"</string><delimiter>,</delimiter> <string>"Veces con cansancio"</string><delimiter>]</delimiter><delimiter>)</delimiter>
+
+    <identifier>for</identifier> <userIdentifier>fila</userIdentifier> <identifier>in</identifier> <userIdentifier>cursor</userIdentifier><delimiter>:</delimiter>
+        <userIdentifier>bd</userIdentifier> <delimiter>=</delimiter> <userIdentifier>bd</userIdentifier><delimiter>.</delimiter><userIdentifier>append</userIdentifier><delimiter>(</delimiter><delimiter>{</delimiter><string>"Semana"</string><delimiter>:</delimiter> <userIdentifier>fila</userIdentifier><delimiter>[</delimiter><integer>0</integer><delimiter>]</delimiter><delimiter>,</delimiter> <string>"ID_Usuario"</string><delimiter>:</delimiter> <userIdentifier>fila</userIdentifier><delimiter>[</delimiter><integer>1</integer><delimiter>]</delimiter><delimiter>,</delimiter> <string>"Nombre"</string><delimiter>:</delimiter> <userIdentifier>fila</userIdentifier><delimiter>[</delimiter><integer>2</integer><delimiter>]</delimiter><delimiter>,</delimiter> <string>"Apellido"</string><delimiter>:</delimiter> <userIdentifier>fila</userIdentifier><delimiter>[</delimiter><integer>3</integer><delimiter>]</delimiter><delimiter>,</delimiter> <string>"Promedio Saturacion Oxigeno"</string><delimiter>:</delimiter> <userIdentifier>fila</userIdentifier><delimiter>[</delimiter><integer>4</integer><delimiter>]</delimiter><delimiter>,</delimiter> <string>"Promedio Ritmo Cardiaco"</string><delimiter>:</delimiter> <userIdentifier>fila</userIdentifier><delimiter>[</delimiter><integer>5</integer><delimiter>]</delimiter><delimiter>,</delimiter> <string>"Promedio Temperatura"</string><delimiter>:</delimiter> <userIdentifier>fila</userIdentifier><delimiter>[</delimiter><integer>6</integer><delimiter>]</delimiter><delimiter>,</delimiter> <string>"Veces con congestion nasal"</string><delimiter>:</delimiter> <userIdentifier>fila</userIdentifier><delimiter>[</delimiter><integer>7</integer><delimiter>]</delimiter><delimiter>,</delimiter> <string>"Veces con dolor de cabeza"</string><delimiter>:</delimiter> <userIdentifier>fila</userIdentifier><delimiter>[</delimiter><integer>8</integer><delimiter>]</delimiter><delimiter>,</delimiter> <string>"Veces con tos seca"</string><delimiter>:</delimiter> <userIdentifier>fila</userIdentifier><delimiter>[</delimiter><integer>9</integer><delimiter>]</delimiter><delimiter>,</delimiter> <string>"Veces con cansancio"</string><delimiter>:</delimiter> <userIdentifier>fila</userIdentifier><delimiter>[</delimiter><integer>10</integer><delimiter>]</delimiter><delimiter>}</delimiter><delimiter>,</delimiter> <userIdentifier>ignore_index</userIdentifier><delimiter>=</delimiter><identifier>True</identifier><delimiter>)</delimiter>
+
+    <userIdentifier>conexion</userIdentifier><delimiter>.</delimiter><userIdentifier>close</userIdentifier><delimiter>(</delimiter><delimiter>)</delimiter>
+    <userIdentifier>print</userIdentifier><delimiter>(</delimiter><userIdentifier>bd</userIdentifier><delimiter>)</delimiter>
+
+    <userIdentifier>semanas</userIdentifier> <delimiter>=</delimiter> <delimiter>[</delimiter><string>"Semana 1"</string><delimiter>,</delimiter><string>"Semana 2"</string><delimiter>]</delimiter>
+    <userIdentifier>promOx</userIdentifier><delimiter>=</delimiter><userIdentifier>bd</userIdentifier><delimiter>[</delimiter><string>"Promedio Saturacion Oxigeno"</string><delimiter>]</delimiter><delimiter>.</delimiter><userIdentifier>tolist</userIdentifier><delimiter>(</delimiter><delimiter>)</delimiter>
+    <userIdentifier>promRpm</userIdentifier> <delimiter>=</delimiter> <userIdentifier>bd</userIdentifier><delimiter>[</delimiter><string>"Promedio Ritmo Cardiaco"</string><delimiter>]</delimiter><delimiter>.</delimiter><userIdentifier>tolist</userIdentifier><delimiter>(</delimiter><delimiter>)</delimiter>
+    <userIdentifier>promTemp</userIdentifier> <delimiter>=</delimiter> <userIdentifier>bd</userIdentifier><delimiter>[</delimiter><string>"Promedio Temperatura"</string><delimiter>]</delimiter><delimiter>.</delimiter><userIdentifier>tolist</userIdentifier><delimiter>(</delimiter><delimiter>)</delimiter>
+    <userIdentifier>congestion</userIdentifier> <delimiter>=</delimiter> <userIdentifier>bd</userIdentifier><delimiter>[</delimiter><string>"Veces con congestion nasal"</string><delimiter>]</delimiter><delimiter>.</delimiter><userIdentifier>tolist</userIdentifier><delimiter>(</delimiter><delimiter>)</delimiter>
+    <userIdentifier>cabeza</userIdentifier> <delimiter>=</delimiter> <userIdentifier>bd</userIdentifier><delimiter>[</delimiter><string>"Veces con dolor de cabeza"</string><delimiter>]</delimiter><delimiter>.</delimiter><userIdentifier>tolist</userIdentifier><delimiter>(</delimiter><delimiter>)</delimiter>
+    <userIdentifier>cansancio</userIdentifier> <delimiter>=</delimiter> <userIdentifier>bd</userIdentifier><delimiter>[</delimiter><string>"Veces con cansancio"</string><delimiter>]</delimiter><delimiter>.</delimiter><userIdentifier>tolist</userIdentifier><delimiter>(</delimiter><delimiter>)</delimiter>
+    <userIdentifier>tosseca</userIdentifier> <delimiter>=</delimiter> <userIdentifier>bd</userIdentifier><delimiter>[</delimiter><string>"Veces con tos seca"</string><delimiter>]</delimiter><delimiter>.</delimiter><userIdentifier>tolist</userIdentifier><delimiter>(</delimiter><delimiter>)</delimiter>
+    <userIdentifier>x</userIdentifier> <delimiter>=</delimiter> <userIdentifier>np</userIdentifier><delimiter>.</delimiter><userIdentifier>arange</userIdentifier><delimiter>(</delimiter><userIdentifier>len</userIdentifier><delimiter>(</delimiter><userIdentifier>semanas</userIdentifier><delimiter>)</delimiter><delimiter>)</delimiter>
+    <userIdentifier>width</userIdentifier> <delimiter>=</delimiter> <integer>0</integer><float>.35</float> 
+    <userIdentifier>fig</userIdentifier><delimiter>,</delimiter> <userIdentifier>ax</userIdentifier> <delimiter>=</delimiter> <userIdentifier>plt</userIdentifier><delimiter>.</delimiter><userIdentifier>subplots</userIdentifier><delimiter>(</delimiter><delimiter>)</delimiter>
+    <userIdentifier>rects2</userIdentifier> <delimiter>=</delimiter> <userIdentifier>ax</userIdentifier><delimiter>.</delimiter><userIdentifier>bar</userIdentifier><delimiter>(</delimiter><userIdentifier>x</userIdentifier> <operator>-</operator><integer>0</integer><float>.5</float> <operator>+</operator> <userIdentifier>width</userIdentifier><operator>/</operator><integer>3</integer> <delimiter>,</delimiter> <userIdentifier>promRpm</userIdentifier><delimiter>,</delimiter> <userIdentifier>width</userIdentifier><delimiter>,</delimiter> <userIdentifier>label</userIdentifier><delimiter>=</delimiter><string>'RPM [bpm]'</string><delimiter>)</delimiter>
+    <userIdentifier>rects1</userIdentifier> <delimiter>=</delimiter> <userIdentifier>ax</userIdentifier><delimiter>.</delimiter><userIdentifier>bar</userIdentifier><delimiter>(</delimiter><userIdentifier>x</userIdentifier> <operator>-</operator> <userIdentifier>width</userIdentifier><operator>/</operator><integer>3</integer><delimiter>,</delimiter> <userIdentifier>promOx</userIdentifier><delimiter>,</delimiter> <userIdentifier>width</userIdentifier><delimiter>,</delimiter> <userIdentifier>label</userIdentifier><delimiter>=</delimiter><string>'Oxigenacion [%SpO2]'</string><delimiter>)</delimiter>
+    <userIdentifier>rects3</userIdentifier> <delimiter>=</delimiter> <userIdentifier>ax</userIdentifier><delimiter>.</delimiter><userIdentifier>bar</userIdentifier><delimiter>(</delimiter><userIdentifier>x</userIdentifier> <operator>+</operator> <userIdentifier>width</userIdentifier><operator>/</operator><integer>3</integer><delimiter>,</delimiter> <userIdentifier>promTemp</userIdentifier><delimiter>,</delimiter> <userIdentifier>width</userIdentifier><delimiter>,</delimiter> <userIdentifier>label</userIdentifier><delimiter>=</delimiter><string>'Temperatura [C°]'</string><delimiter>)</delimiter>
+
+    <userIdentifier>condTemp</userIdentifier> <delimiter>=</delimiter> <userIdentifier>mean</userIdentifier><delimiter>(</delimiter><userIdentifier>promTemp</userIdentifier><delimiter>)</delimiter> <operator>></operator> <integer>37</integer> <identifier>or</identifier> <userIdentifier>mean</userIdentifier><delimiter>(</delimiter><userIdentifier>promTemp</userIdentifier><delimiter>)</delimiter> <operator><</operator> <integer>36</integer>
+    <userIdentifier>condOx</userIdentifier> <delimiter>=</delimiter> <userIdentifier>mean</userIdentifier><delimiter>(</delimiter><userIdentifier>promOx</userIdentifier><delimiter>)</delimiter> <operator><</operator> <integer>95</integer>
+    <userIdentifier>condRpm</userIdentifier> <delimiter>=</delimiter> <userIdentifier>mean</userIdentifier><delimiter>(</delimiter><userIdentifier>promRpm</userIdentifier><delimiter>)</delimiter> <operator><</operator> <integer>60</integer>
+    <userIdentifier>sintomas</userIdentifier> <delimiter>=</delimiter> <userIdentifier>sum</userIdentifier><delimiter>(</delimiter><userIdentifier>congestion</userIdentifier><delimiter>)</delimiter> <operator>></operator> <integer>4</integer> <identifier>or</identifier> <userIdentifier>sum</userIdentifier><delimiter>(</delimiter><userIdentifier>cabeza</userIdentifier><delimiter>)</delimiter> <operator>></operator> <integer>4</integer> <identifier>or</identifier> <userIdentifier>sum</userIdentifier><delimiter>(</delimiter><userIdentifier>cansancio</userIdentifier><delimiter>)</delimiter> <operator>></operator> <integer>4</integer> <identifier>or</identifier> <userIdentifier>sum</userIdentifier><delimiter>(</delimiter><userIdentifier>tosseca</userIdentifier><delimiter>)</delimiter> <operator>></operator> <integer>4</integer>
+
+
+    <commentary>#if(pulso y temp alarmantes) poner mensaje "Acuda al médico"</commentary>
+    <identifier>if</identifier> <delimiter>(</delimiter><userIdentifier>condTemp</userIdentifier> <identifier>and</identifier> <userIdentifier>condOx</userIdentifier> <identifier>and</identifier> <userIdentifier>sintomas</userIdentifier><delimiter>)</delimiter><delimiter>:</delimiter>
+        <userIdentifier>print</userIdentifier><delimiter>(</delimiter><string>"\nALERTA 1: Sus datos de las últimas dos semanas indican que usted\npuede haber contraido el virus COVID-19. POR FAVOR CONSULTE A SU\nMÉDICO A LA BREVEDAD Y ABSTENGASE DEL CONTACTO CON OTRAS PERSONAS.\n"</string><delimiter>)</delimiter>
+
+        <identifier>if</identifier><delimiter>(</delimiter> <userIdentifier>mean</userIdentifier><delimiter>(</delimiter><userIdentifier>promTemp</userIdentifier><delimiter>)</delimiter> <operator>></operator> <integer>37</integer> <identifier>and</identifier> <userIdentifier>condRpm</userIdentifier><delimiter>)</delimiter><delimiter>:</delimiter>
+            <userIdentifier>print</userIdentifier><delimiter>(</delimiter><string>"\nALERTA 2: su pulso promedio es muy bajo, ello suele ser\n un indicador de riesgo en pacientes con COVID-19, ACUDA A UN HOSPITAL PARA SU REVISIÓN."</string><delimiter>)</delimiter>
+    <identifier>else</identifier><delimiter>:</delimiter>
+        <userIdentifier>print</userIdentifier><delimiter>(</delimiter><string>"\nSus datos indican que usted no presenta ningún síntoma\nnotorio de COVID-19. Sin embargo, recuerde seguir tomando sus precauciones.\n"</string><delimiter>)</delimiter>
+        
+
+    <userIdentifier>ax</userIdentifier><delimiter>.</delimiter><userIdentifier>set_ylabel</userIdentifier><delimiter>(</delimiter><string>"Promedios"</string><delimiter>)</delimiter>
+    <userIdentifier>ax</userIdentifier><delimiter>.</delimiter><userIdentifier>set_xticks</userIdentifier><delimiter>(</delimiter><userIdentifier>x</userIdentifier><delimiter>)</delimiter>
+    <userIdentifier>ax</userIdentifier><delimiter>.</delimiter><userIdentifier>set_title</userIdentifier><delimiter>(</delimiter><string>"Estadísticas de 2 semanas"</string><delimiter>)</delimiter>
+    <userIdentifier>ax</userIdentifier><delimiter>.</delimiter><userIdentifier>set_xticklabels</userIdentifier><delimiter>(</delimiter><userIdentifier>semanas</userIdentifier><delimiter>)</delimiter>
+    <userIdentifier>ax</userIdentifier><delimiter>.</delimiter><userIdentifier>legend</userIdentifier><delimiter>(</delimiter><userIdentifier>loc</userIdentifier><delimiter>=</delimiter><integer>8</integer><delimiter>,</delimiter> <userIdentifier>prop</userIdentifier><delimiter>=</delimiter><delimiter>{</delimiter><string>'size'</string><delimiter>:</delimiter> <integer>6</integer><delimiter>}</delimiter><delimiter>)</delimiter>
+
+    <userIdentifier>rectas</userIdentifier> <delimiter>=</delimiter> <delimiter>[</delimiter><userIdentifier>rects1</userIdentifier><delimiter>,</delimiter> <userIdentifier>rects2</userIdentifier><delimiter>,</delimiter> <userIdentifier>rects3</userIdentifier><delimiter>]</delimiter>
+
+    <identifier>for</identifier> <userIdentifier>x</userIdentifier> <identifier>in</identifier> <userIdentifier>rectas</userIdentifier><delimiter>:</delimiter>
+        <identifier>for</identifier> <userIdentifier>rect</userIdentifier> <identifier>in</identifier> <userIdentifier>x</userIdentifier><delimiter>:</delimiter>
+            <userIdentifier>height</userIdentifier> <delimiter>=</delimiter> <userIdentifier>rect</userIdentifier><delimiter>.</delimiter><userIdentifier>get_height</userIdentifier><delimiter>(</delimiter><delimiter>)</delimiter>
+            <userIdentifier>ax</userIdentifier><delimiter>.</delimiter><userIdentifier>annotate</userIdentifier><delimiter>(</delimiter><string>'{}'</string><delimiter>.</delimiter><userIdentifier>format</userIdentifier><delimiter>(</delimiter><userIdentifier>round</userIdentifier><delimiter>(</delimiter><userIdentifier>height</userIdentifier><delimiter>,</delimiter><integer>2</integer><delimiter>)</delimiter><delimiter>)</delimiter><delimiter>,</delimiter>
+                    <userIdentifier>xy</userIdentifier><delimiter>=</delimiter><delimiter>(</delimiter><userIdentifier>rect</userIdentifier><delimiter>.</delimiter><userIdentifier>get_x</userIdentifier><delimiter>(</delimiter><delimiter>)</delimiter> <operator>+</operator> <userIdentifier>rect</userIdentifier><delimiter>.</delimiter><userIdentifier>get_width</userIdentifier><delimiter>(</delimiter><delimiter>)</delimiter> <operator>/</operator> <integer>2</integer><delimiter>,</delimiter> <userIdentifier>height</userIdentifier><operator>-</operator><integer>2</integer><delimiter>)</delimiter><delimiter>,</delimiter>
+                    <userIdentifier>xytext</userIdentifier><delimiter>=</delimiter><delimiter>(</delimiter><integer>0</integer><delimiter>,</delimiter> <integer>3</integer><delimiter>)</delimiter><delimiter>,</delimiter>  <commentary># 3 points vertical offset</commentary>
+                    <userIdentifier>textcoords</userIdentifier><delimiter>=</delimiter><string>"offset points"</string><delimiter>,</delimiter>
+                    <userIdentifier>ha</userIdentifier><delimiter>=</delimiter><string>'center'</string><delimiter>,</delimiter> <userIdentifier>va</userIdentifier><delimiter>=</delimiter><string>'bottom'</string><delimiter>)</delimiter>
+
+    <userIdentifier>plt</userIdentifier><delimiter>.</delimiter><userIdentifier>show</userIdentifier><delimiter>(</delimiter><delimiter>)</delimiter>
+    
+    <commentary>#Oxigenación 95-100 NORMAL, menor a 95 WARNING</commentary>
+    <commentary>#Temperatura 36.5°C to 37°C NORMAL, diferente WARNING</commentary>
+    <commentary>#Ritmo cardiaco 60 a 100 NORMAL</commentary>
+    
+    <userIdentifier>input</userIdentifier><delimiter>(</delimiter><string>"Ingrese cualquier letra para regresar: "</string><delimiter>)</delimiter>
+
+
+<identifier>def</identifier> <userIdentifier>opcion2</userIdentifier><delimiter>(</delimiter><userIdentifier>cursor</userIdentifier><delimiter>,</delimiter> <userIdentifier>conexion</userIdentifier><delimiter>)</delimiter><delimiter>:</delimiter> 
+    <string>"""
+    Esta vista genera una gráfica de barras de todos los códigos postales con al menos un posible
+    caso de COVID-19.
+    """</string>
+    <userIdentifier>clear</userIdentifier><delimiter>(</delimiter><delimiter>)</delimiter>
+    <userIdentifier>print</userIdentifier><delimiter>(</delimiter><string>"\nZONAS CON MÁS SOSPECHOSOS"</string><delimiter>)</delimiter>
+    <userIdentifier>cursor</userIdentifier><delimiter>.</delimiter><userIdentifier>execute</userIdentifier><delimiter>(</delimiter><string>"SELECT datos_biometricos.codigo_postal as 'Zona', COUNT(DISTINCT persona.ID_usuario) as 'Número de Posibles Infectados' FROM persona, datos_biometricos WHERE datos_biometricos.ID_usuario = persona.ID_usuario AND DATEDIFF(NOW(),datos_biometricos.fecha) < 8 AND (datos_biometricos.temperatura > 37 OR datos_biometricos.temperatura < 37) AND datos_biometricos.saturacion_oxigeno < 95 AND ((datos_biometricos.congestion_nasal = 'si') OR (datos_biometricos.dolor_cabeza = 'si') OR (datos_biometricos.tos_seca = 'si') OR (datos_biometricos.cansancio = 'si')) GROUP BY datos_biometricos.codigo_postal "</string><delimiter>)</delimiter>
+    <userIdentifier>bd</userIdentifier><delimiter>=</delimiter> <userIdentifier>pd</userIdentifier><delimiter>.</delimiter><userIdentifier>DataFrame</userIdentifier><delimiter>(</delimiter><userIdentifier>columns</userIdentifier> <delimiter>=</delimiter> <delimiter>[</delimiter><string>"Zona"</string><delimiter>,</delimiter><string>"Numero de Posibles Infectados"</string><delimiter>]</delimiter><delimiter>)</delimiter>
+    
+    <identifier>for</identifier> <userIdentifier>fila</userIdentifier> <identifier>in</identifier> <userIdentifier>cursor</userIdentifier><delimiter>:</delimiter>
+        <userIdentifier>bd</userIdentifier> <delimiter>=</delimiter> <userIdentifier>bd</userIdentifier><delimiter>.</delimiter><userIdentifier>append</userIdentifier><delimiter>(</delimiter><delimiter>{</delimiter> <string>'Zona'</string><delimiter>:</delimiter> <userIdentifier>fila</userIdentifier><delimiter>[</delimiter><integer>0</integer><delimiter>]</delimiter><delimiter>,</delimiter> <string>'Numero Posibles Infectados'</string><delimiter>:</delimiter><userIdentifier>fila</userIdentifier><delimiter>[</delimiter><integer>1</integer><delimiter>]</delimiter><delimiter>}</delimiter><delimiter>,</delimiter>
+                       <userIdentifier>ignore_index</userIdentifier><delimiter>=</delimiter><identifier>True</identifier><delimiter>)</delimiter>
+    <userIdentifier>conexion</userIdentifier><delimiter>.</delimiter><userIdentifier>close</userIdentifier><delimiter>(</delimiter><delimiter>)</delimiter>
+
+    <userIdentifier>bd</userIdentifier><delimiter>.</delimiter><userIdentifier>style</userIdentifier>
+    <userIdentifier>bd</userIdentifier><delimiter>.</delimiter><userIdentifier>plot</userIdentifier><delimiter>(</delimiter><userIdentifier>kind</userIdentifier> <delimiter>=</delimiter> <string>'bar'</string><delimiter>,</delimiter> <userIdentifier>x</userIdentifier> <delimiter>=</delimiter> <string>'Zona'</string><delimiter>,</delimiter> <userIdentifier>y</userIdentifier> <delimiter>=</delimiter> <string>'Numero Posibles Infectados'</string><delimiter>)</delimiter>
+    <userIdentifier>plt</userIdentifier><delimiter>.</delimiter><userIdentifier>show</userIdentifier><delimiter>(</delimiter><delimiter>)</delimiter>
+    <userIdentifier>input</userIdentifier><delimiter>(</delimiter><string>"Ingrese cualquier letra para regresar: "</string><delimiter>)</delimiter>
+    
+    
+<identifier>def</identifier> <userIdentifier>opcion3</userIdentifier><delimiter>(</delimiter><userIdentifier>cursor</userIdentifier><delimiter>,</delimiter> <userIdentifier>conexion</userIdentifier><delimiter>)</delimiter><delimiter>:</delimiter> 
+    <string>"""
+    Esta vista se encarga de proporcionar los nombres completos de las personas que tengan
+    alguna condición que los categorice como de alto riesgo. Se muestran los nombres en una
+    tabla o data frame.
+    """</string>
+    <userIdentifier>clear</userIdentifier><delimiter>(</delimiter><delimiter>)</delimiter>
+    <userIdentifier>print</userIdentifier><delimiter>(</delimiter><string>"\nPERSONAS REGISTRADAS DE ALTO RIESGO"</string><delimiter>)</delimiter>
+    <userIdentifier>cursor</userIdentifier><delimiter>.</delimiter><userIdentifier>execute</userIdentifier><delimiter>(</delimiter><string>'select p.ID_usuario, p.nombres as "Nombre", p.apellidos as "Apellidos" from persona p, persona_condicion pc, condicion_de_salud cs where (p.ID_usuario = pc.ID_usuario AND pc.ID_condicion = cs.ID_condicion AND cs.riesgo_covid = "alto") OR TIMESTAMPDIFF(YEAR, p.fecha_nacimiento, CURDATE()) > 59 GROUP BY p.ID_usuario, p.nombres,  p.apellidos'</string><delimiter>)</delimiter>
+    <userIdentifier>bd</userIdentifier> <delimiter>=</delimiter> <userIdentifier>pd</userIdentifier><delimiter>.</delimiter><userIdentifier>DataFrame</userIdentifier><delimiter>(</delimiter><userIdentifier>columns</userIdentifier> <delimiter>=</delimiter> <delimiter>[</delimiter><string>"ID_Usuario"</string><delimiter>,</delimiter><string>"Nombre"</string><delimiter>,</delimiter> <string>"Apellido"</string><delimiter>]</delimiter><delimiter>)</delimiter>
+
+    <identifier>for</identifier> <userIdentifier>fila</userIdentifier> <identifier>in</identifier> <userIdentifier>cursor</userIdentifier><delimiter>:</delimiter>
+        <userIdentifier>bd</userIdentifier> <delimiter>=</delimiter> <userIdentifier>bd</userIdentifier><delimiter>.</delimiter><userIdentifier>append</userIdentifier><delimiter>(</delimiter><delimiter>{</delimiter><string>"ID_Usuario"</string> <delimiter>:</delimiter> <userIdentifier>fila</userIdentifier><delimiter>[</delimiter><integer>0</integer><delimiter>]</delimiter><delimiter>,</delimiter> <string>"Nombre"</string><delimiter>:</delimiter> <userIdentifier>fila</userIdentifier><delimiter>[</delimiter><integer>1</integer><delimiter>]</delimiter><delimiter>,</delimiter> <string>"Apellido"</string><delimiter>:</delimiter> <userIdentifier>fila</userIdentifier><delimiter>[</delimiter><integer>2</integer><delimiter>]</delimiter><delimiter>}</delimiter><delimiter>,</delimiter> <userIdentifier>ignore_index</userIdentifier><delimiter>=</delimiter><identifier>True</identifier><delimiter>)</delimiter>
+    <userIdentifier>conexion</userIdentifier><delimiter>.</delimiter><userIdentifier>close</userIdentifier><delimiter>(</delimiter><delimiter>)</delimiter>
+    <userIdentifier>print</userIdentifier><delimiter>(</delimiter><userIdentifier>bd</userIdentifier><delimiter>)</delimiter>
+    <userIdentifier>input</userIdentifier><delimiter>(</delimiter><string>"Ingrese cualquier letra para regresar: "</string><delimiter>)</delimiter>
+
+
+<identifier>def</identifier> <userIdentifier>opcion4</userIdentifier><delimiter>(</delimiter><userIdentifier>cursor</userIdentifier><delimiter>,</delimiter> <userIdentifier>conexion</userIdentifier><delimiter>)</delimiter><delimiter>:</delimiter>
+    <string>"""
+    Esta vista proporciona una tabla o data frame que muestra todos los códigos postales en
+    donde se registraron los datos biométricos de una persona.
+    """</string>
+    <userIdentifier>clear</userIdentifier><delimiter>(</delimiter><delimiter>)</delimiter>
+    <userIdentifier>print</userIdentifier><delimiter>(</delimiter><string>"\nRASTREO"</string><delimiter>)</delimiter>
+    <userIdentifier>apellido</userIdentifier> <delimiter>=</delimiter> <userIdentifier>input</userIdentifier><delimiter>(</delimiter><string>"Ingrese los apellidos: "</string><delimiter>)</delimiter>
+    <userIdentifier>nombre</userIdentifier> <delimiter>=</delimiter> <userIdentifier>input</userIdentifier><delimiter>(</delimiter><string>"Ingrese el nombre: "</string><delimiter>)</delimiter>
+    <userIdentifier>query</userIdentifier> <delimiter>=</delimiter> <userIdentifier>f</userIdentifier><string>'SELECT db.codigo_postal as "Código Postal", p.nombres as "Nombre", p.apellidos as "Apellido" from datos_biometricos db, persona p where db.ID_usuario = p.ID_usuario and p.nombres like "{nombre}" and p.apellidos like "{apellido}" GROUP BY db.codigo_postal, p.nombres, p.apellidos'</string>
+    <userIdentifier>cursor</userIdentifier><delimiter>.</delimiter><userIdentifier>execute</userIdentifier><delimiter>(</delimiter><userIdentifier>query</userIdentifier><delimiter>)</delimiter>
+    <userIdentifier>bd</userIdentifier> <delimiter>=</delimiter> <userIdentifier>pd</userIdentifier><delimiter>.</delimiter><userIdentifier>DataFrame</userIdentifier><delimiter>(</delimiter><userIdentifier>columns</userIdentifier> <delimiter>=</delimiter> <delimiter>[</delimiter><string>"Código Postal"</string><delimiter>,</delimiter><string>"Nombre"</string><delimiter>,</delimiter><string>"Apellido"</string><delimiter>]</delimiter><delimiter>)</delimiter>
+
+    <identifier>for</identifier> <userIdentifier>fila</userIdentifier> <identifier>in</identifier> <userIdentifier>cursor</userIdentifier><delimiter>:</delimiter>
+        <userIdentifier>bd</userIdentifier> <delimiter>=</delimiter> <userIdentifier>bd</userIdentifier><delimiter>.</delimiter><userIdentifier>append</userIdentifier><delimiter>(</delimiter><delimiter>{</delimiter><string>"Código Postal"</string><delimiter>:</delimiter> <userIdentifier>fila</userIdentifier><delimiter>[</delimiter><integer>0</integer><delimiter>]</delimiter><delimiter>,</delimiter> <string>"Nombre"</string><delimiter>:</delimiter> <userIdentifier>fila</userIdentifier><delimiter>[</delimiter><integer>1</integer><delimiter>]</delimiter><delimiter>,</delimiter> <string>"Apellido"</string><delimiter>:</delimiter> <userIdentifier>fila</userIdentifier><delimiter>[</delimiter><integer>2</integer><delimiter>]</delimiter><delimiter>}</delimiter><delimiter>,</delimiter> <userIdentifier>ignore_index</userIdentifier><delimiter>=</delimiter><identifier>True</identifier><delimiter>)</delimiter>
+    <userIdentifier>conexion</userIdentifier><delimiter>.</delimiter><userIdentifier>close</userIdentifier><delimiter>(</delimiter><delimiter>)</delimiter>
+    <userIdentifier>print</userIdentifier><delimiter>(</delimiter><userIdentifier>bd</userIdentifier><delimiter>)</delimiter>    
+    <userIdentifier>input</userIdentifier><delimiter>(</delimiter><string>"Ingrese cualquier letra para regresar: "</string><delimiter>)</delimiter>
+
+
+<identifier>def</identifier> <userIdentifier>opcion5</userIdentifier><delimiter>(</delimiter><userIdentifier>cursor</userIdentifier><delimiter>,</delimiter> <userIdentifier>conexion</userIdentifier><delimiter>)</delimiter><delimiter>:</delimiter>
+    <string>"""
+    Esta vista permite que el usuario introduzca su código postal y pueda saber el número de
+    posibles casos de COVID-19 cuyos registros se realizaron en dicha zona.
+    """</string>
+    <userIdentifier>clear</userIdentifier><delimiter>(</delimiter><delimiter>)</delimiter>
+    <userIdentifier>print</userIdentifier><delimiter>(</delimiter><string>"\nPOSIBLES CASOS EN MI ZONA"</string><delimiter>)</delimiter>
+    <userIdentifier>codigo_postal</userIdentifier> <delimiter>=</delimiter> <userIdentifier>input</userIdentifier><delimiter>(</delimiter><string>"Ingresa tu código postal: "</string><delimiter>)</delimiter>
+    
+    <userIdentifier>cursor</userIdentifier><delimiter>.</delimiter><userIdentifier>execute</userIdentifier><delimiter>(</delimiter><userIdentifier>f</userIdentifier><string>"SELECT datos_biometricos.codigo_postal as 'Zona', COUNT(DISTINCT persona.ID_usuario) as 'Número de Posibles Infectados' FROM persona, datos_biometricos WHERE datos_biometricos.ID_usuario = persona.ID_usuario AND datos_biometricos.codigo_postal = '{codigo_postal}' AND DATEDIFF(NOW(),datos_biometricos.fecha) < 8 AND (datos_biometricos.temperatura > 37 OR datos_biometricos.temperatura < 37) AND datos_biometricos.saturacion_oxigeno < 95 AND ((datos_biometricos.congestion_nasal = 'si') OR (datos_biometricos.dolor_cabeza = 'si') OR (datos_biometricos.tos_seca = 'si') OR (datos_biometricos.cansancio = 'si')) GROUP BY datos_biometricos.codigo_postal "</string><delimiter>)</delimiter>
+
+    <userIdentifier>bd</userIdentifier><delimiter>=</delimiter> <userIdentifier>pd</userIdentifier><delimiter>.</delimiter><userIdentifier>DataFrame</userIdentifier><delimiter>(</delimiter><userIdentifier>columns</userIdentifier> <delimiter>=</delimiter> <delimiter>[</delimiter><string>"Zona"</string><delimiter>,</delimiter><string>"Numero de Posibles Infectados"</string><delimiter>]</delimiter><delimiter>)</delimiter>
+
+    <identifier>for</identifier> <userIdentifier>fila</userIdentifier> <identifier>in</identifier> <userIdentifier>cursor</userIdentifier><delimiter>:</delimiter>
+        <userIdentifier>bd</userIdentifier> <delimiter>=</delimiter> <userIdentifier>bd</userIdentifier><delimiter>.</delimiter><userIdentifier>append</userIdentifier><delimiter>(</delimiter><delimiter>{</delimiter> <string>'Zona'</string><delimiter>:</delimiter> <userIdentifier>fila</userIdentifier><delimiter>[</delimiter><integer>0</integer><delimiter>]</delimiter><delimiter>,</delimiter> <string>'Numero de Posibles Infectados'</string><delimiter>:</delimiter><userIdentifier>fila</userIdentifier><delimiter>[</delimiter><integer>1</integer><delimiter>]</delimiter><delimiter>}</delimiter><delimiter>,</delimiter>
+                       <userIdentifier>ignore_index</userIdentifier><delimiter>=</delimiter><identifier>True</identifier><delimiter>)</delimiter>
+    <userIdentifier>conexion</userIdentifier><delimiter>.</delimiter><userIdentifier>close</userIdentifier><delimiter>(</delimiter><delimiter>)</delimiter>
+    <userIdentifier>bd</userIdentifier><delimiter>.</delimiter><userIdentifier>style</userIdentifier> 
+    <userIdentifier>print</userIdentifier><delimiter>(</delimiter><userIdentifier>bd</userIdentifier><delimiter>)</delimiter>
+    <userIdentifier>input</userIdentifier><delimiter>(</delimiter><string>"Ingrese cualquier letra para regresar: "</string><delimiter>)</delimiter>
+
+
+<identifier>def</identifier> <userIdentifier>opcion6</userIdentifier><delimiter>(</delimiter><userIdentifier>cursor</userIdentifier><delimiter>,</delimiter> <userIdentifier>conexion</userIdentifier><delimiter>)</delimiter><delimiter>:</delimiter> 
+    <string>"""
+    Esta vista regresa una tabla con los ID, nombres, apellidos, los promedios de temperatura y
+    los promedios de oxigenación de las personas que han presentado indicios de haber contraído
+    el virus en los últimos 7 días.
+    """</string>
+    <userIdentifier>clear</userIdentifier><delimiter>(</delimiter><delimiter>)</delimiter>
+    <userIdentifier>print</userIdentifier><delimiter>(</delimiter><string>"\nPOSIBLES CASOS DE COVID-19"</string><delimiter>)</delimiter>
+    <userIdentifier>cursor</userIdentifier><delimiter>.</delimiter><userIdentifier>execute</userIdentifier><delimiter>(</delimiter><string>"SELECT persona.ID_usuario, persona.nombres, persona.apellidos, ROUND(AVG(datos_biometricos.temperatura),2), ROUND(AVG(datos_biometricos.saturacion_oxigeno),2) FROM persona, datos_biometricos WHERE datos_biometricos.ID_usuario = persona.ID_usuario AND DATEDIFF(NOW(),datos_biometricos.fecha) < 8 GROUP BY datos_biometricos.ID_usuario HAVING (AVG(datos_biometricos.temperatura) > 37 OR AVG(datos_biometricos.temperatura) < 36) AND AVG(datos_biometricos.saturacion_oxigeno) < 95 AND (COUNT(datos_biometricos.congestion_nasal = 'si') > 4 OR COUNT(datos_biometricos.dolor_cabeza = 'si') > 4 OR COUNT(datos_biometricos.tos_seca = 'si') > 4 OR COUNT(datos_biometricos.cansancio = 'si') > 4)"</string><delimiter>)</delimiter>
+    <userIdentifier>bd</userIdentifier><delimiter>=</delimiter> <userIdentifier>pd</userIdentifier><delimiter>.</delimiter><userIdentifier>DataFrame</userIdentifier><delimiter>(</delimiter><userIdentifier>columns</userIdentifier> <delimiter>=</delimiter> <delimiter>[</delimiter><string>"ID Usuario"</string><delimiter>,</delimiter><string>"Nombre(s)"</string><delimiter>,</delimiter><string>"Apellido(s)"</string><delimiter>,</delimiter><string>"Promedio Temperatura [°C]"</string><delimiter>,</delimiter><string>"Promedio Saturación Oxígeno [%SpO2]"</string><delimiter>]</delimiter><delimiter>)</delimiter>
+
+    <identifier>for</identifier> <userIdentifier>fila</userIdentifier> <identifier>in</identifier> <userIdentifier>cursor</userIdentifier><delimiter>:</delimiter>
+        <userIdentifier>bd</userIdentifier> <delimiter>=</delimiter> <userIdentifier>bd</userIdentifier><delimiter>.</delimiter><userIdentifier>append</userIdentifier><delimiter>(</delimiter><delimiter>{</delimiter> <string>'ID Usuario'</string><delimiter>:</delimiter> <userIdentifier>fila</userIdentifier><delimiter>[</delimiter><integer>0</integer><delimiter>]</delimiter><delimiter>,</delimiter> <string>'Nombre(s)'</string><delimiter>:</delimiter><userIdentifier>fila</userIdentifier><delimiter>[</delimiter><integer>1</integer><delimiter>]</delimiter><delimiter>,</delimiter> <string>'Apellido(s)'</string><delimiter>:</delimiter><userIdentifier>fila</userIdentifier><delimiter>[</delimiter><integer>2</integer><delimiter>]</delimiter><delimiter>,</delimiter><string>'Promedio Temperatura [°C]'</string><delimiter>:</delimiter><userIdentifier>fila</userIdentifier><delimiter>[</delimiter><integer>3</integer><delimiter>]</delimiter><delimiter>,</delimiter> <string>'Promedio Saturación Oxígeno [%SpO2]'</string><delimiter>:</delimiter><userIdentifier>fila</userIdentifier><delimiter>[</delimiter><integer>4</integer><delimiter>]</delimiter><delimiter>}</delimiter><delimiter>,</delimiter>
+                       <userIdentifier>ignore_index</userIdentifier><delimiter>=</delimiter><identifier>True</identifier><delimiter>)</delimiter>
+    <userIdentifier>conexion</userIdentifier><delimiter>.</delimiter><userIdentifier>close</userIdentifier><delimiter>(</delimiter><delimiter>)</delimiter>
+    <userIdentifier>bd</userIdentifier><delimiter>.</delimiter><userIdentifier>style</userIdentifier> 
+    <userIdentifier>print</userIdentifier><delimiter>(</delimiter><userIdentifier>bd</userIdentifier><delimiter>)</delimiter>
+    <userIdentifier>input</userIdentifier><delimiter>(</delimiter><string>"Ingrese cualquier letra para regresar: "</string><delimiter>)</delimiter>
+    
+
+
+<identifier>def</identifier> <userIdentifier>main</userIdentifier><delimiter>(</delimiter><delimiter>)</delimiter><delimiter>:</delimiter>
+    <identifier>while</identifier> <identifier>True</identifier><delimiter>:</delimiter>
+        <userIdentifier>clear</userIdentifier><delimiter>(</delimiter><delimiter>)</delimiter>
+        <userIdentifier>conexion</userIdentifier> <delimiter>=</delimiter> <userIdentifier>conexion_sql</userIdentifier><delimiter>(</delimiter><delimiter>)</delimiter>
+        <userIdentifier>cursor</userIdentifier> <delimiter>=</delimiter> <userIdentifier>conexion</userIdentifier><delimiter>.</delimiter><userIdentifier>cursor</userIdentifier><delimiter>(</delimiter><delimiter>)</delimiter>
+        <userIdentifier>print</userIdentifier><delimiter>(</delimiter><string>"Reto de IoT\n\n0)Mis mediciones de hoy\n1)Mi diagnóstico\n2)Zonas con más sospechosos\n3)Personas registradas de alto riesgo\n4)Rastreo\n5)Posibles casos en mi zona\n6)Posibles casos de COVID-19\n7)SALIR"</string><delimiter>)</delimiter>
+        <userIdentifier>opcion</userIdentifier> <delimiter>=</delimiter> <userIdentifier>int</userIdentifier><delimiter>(</delimiter><userIdentifier>input</userIdentifier><delimiter>(</delimiter><string>"Seleccione una opción: "</string><delimiter>)</delimiter><delimiter>)</delimiter>
+        <identifier>if</identifier> <delimiter>(</delimiter><userIdentifier>opcion</userIdentifier> <operator>==</operator> <integer>0</integer><delimiter>)</delimiter><delimiter>:</delimiter>
+            <userIdentifier>opcion0</userIdentifier><delimiter>(</delimiter><userIdentifier>cursor</userIdentifier><delimiter>,</delimiter><userIdentifier>conexion</userIdentifier><delimiter>)</delimiter>
+        <identifier>elif</identifier><delimiter>(</delimiter><userIdentifier>opcion</userIdentifier> <operator>==</operator> <integer>1</integer><delimiter>)</delimiter><delimiter>:</delimiter>
+            <userIdentifier>opcion1</userIdentifier><delimiter>(</delimiter><userIdentifier>cursor</userIdentifier><delimiter>,</delimiter> <userIdentifier>conexion</userIdentifier><delimiter>)</delimiter>
+        <identifier>elif</identifier><delimiter>(</delimiter><userIdentifier>opcion</userIdentifier> <operator>==</operator> <integer>2</integer><delimiter>)</delimiter><delimiter>:</delimiter>
+            <userIdentifier>opcion2</userIdentifier><delimiter>(</delimiter><userIdentifier>cursor</userIdentifier><delimiter>,</delimiter> <userIdentifier>conexion</userIdentifier><delimiter>)</delimiter>
+        <identifier>elif</identifier><delimiter>(</delimiter><userIdentifier>opcion</userIdentifier> <operator>==</operator> <integer>3</integer><delimiter>)</delimiter><delimiter>:</delimiter>
+            <userIdentifier>opcion3</userIdentifier><delimiter>(</delimiter><userIdentifier>cursor</userIdentifier><delimiter>,</delimiter> <userIdentifier>conexion</userIdentifier><delimiter>)</delimiter>
+        <identifier>elif</identifier><delimiter>(</delimiter><userIdentifier>opcion</userIdentifier> <operator>==</operator> <integer>4</integer><delimiter>)</delimiter><delimiter>:</delimiter>
+            <userIdentifier>opcion4</userIdentifier><delimiter>(</delimiter><userIdentifier>cursor</userIdentifier><delimiter>,</delimiter> <userIdentifier>conexion</userIdentifier><delimiter>)</delimiter>
+        <identifier>elif</identifier><delimiter>(</delimiter><userIdentifier>opcion</userIdentifier> <operator>==</operator> <integer>5</integer><delimiter>)</delimiter><delimiter>:</delimiter>
+            <userIdentifier>opcion5</userIdentifier><delimiter>(</delimiter><userIdentifier>cursor</userIdentifier><delimiter>,</delimiter> <userIdentifier>conexion</userIdentifier><delimiter>)</delimiter>
+        <identifier>elif</identifier><delimiter>(</delimiter><userIdentifier>opcion</userIdentifier> <operator>==</operator> <integer>6</integer><delimiter>)</delimiter><delimiter>:</delimiter>
+            <userIdentifier>opcion6</userIdentifier><delimiter>(</delimiter><userIdentifier>cursor</userIdentifier><delimiter>,</delimiter> <userIdentifier>conexion</userIdentifier><delimiter>)</delimiter>
+        <identifier>elif</identifier><delimiter>(</delimiter><userIdentifier>opcion</userIdentifier> <operator>==</operator> <integer>7</integer><delimiter>)</delimiter><delimiter>:</delimiter>
+            <userIdentifier>conexion</userIdentifier><delimiter>.</delimiter><userIdentifier>close</userIdentifier><delimiter>(</delimiter><delimiter>)</delimiter>
+            <userIdentifier>sys</userIdentifier><delimiter>.</delimiter><userIdentifier>exit</userIdentifier><delimiter>(</delimiter><delimiter>)</delimiter>
+        <identifier>else</identifier><delimiter>:</delimiter>
+            <userIdentifier>print</userIdentifier><delimiter>(</delimiter><string>"No ingresó una opción correcta."</string><delimiter>)</delimiter>
+
+<userIdentifier>main</userIdentifier><delimiter>(</delimiter><delimiter>)</delimiter>
+</pre><p></body></html>

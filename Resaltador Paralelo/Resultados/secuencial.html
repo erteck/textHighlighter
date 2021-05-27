@@ -1,0 +1,46 @@
+
+    <html>
+    <head>
+        <link rel="stylesheet" href="../estilos.css">
+    </head>
+    <body>
+    <p><pre><string>"""
+    Actividad 5.2.1 Programación paralela y concurrente en Python
+    Edna Jacqueline Zavala Ortega A01750480
+    Erick Alberto Bustos Cruz A01378966
+"""</string>
+<identifier>import</identifier> <userIdentifier>math</userIdentifier>
+<identifier>import</identifier> <userIdentifier>time</userIdentifier>
+
+<identifier>def</identifier> <userIdentifier>isPrime</userIdentifier><delimiter>(</delimiter><userIdentifier>n</userIdentifier><delimiter>)</delimiter><delimiter>:</delimiter>
+    <string>"""
+    Función que recibe un número "n" y regresa verdadero si y solo si este es un
+    número primo. En caso de no serlo, la función regresa falso.
+    """</string>
+    <identifier>if</identifier> <userIdentifier>n</userIdentifier> <operator><</operator> <integer>2</integer><delimiter>:</delimiter>
+        <identifier>return</identifier> <identifier>False</identifier>
+    <identifier>elif</identifier> <userIdentifier>n</userIdentifier> <operator>==</operator> <integer>2</integer><delimiter>:</delimiter>
+        <identifier>return</identifier> <userIdentifier>n</userIdentifier>
+    <identifier>else</identifier><delimiter>:</delimiter>
+        <identifier>for</identifier> <userIdentifier>i</userIdentifier> <identifier>in</identifier> <userIdentifier>range</userIdentifier><delimiter>(</delimiter><integer>2</integer><delimiter>,</delimiter> <userIdentifier>math</userIdentifier><delimiter>.</delimiter><userIdentifier>floor</userIdentifier><delimiter>(</delimiter><userIdentifier>math</userIdentifier><delimiter>.</delimiter><userIdentifier>sqrt</userIdentifier><delimiter>(</delimiter><userIdentifier>n</userIdentifier><delimiter>)</delimiter><delimiter>)</delimiter><operator>+</operator><integer>1</integer><delimiter>)</delimiter><delimiter>:</delimiter>
+            <identifier>if</identifier> <userIdentifier>n</userIdentifier><operator>%</operator><userIdentifier>i</userIdentifier> <operator>==</operator> <integer>0</integer><delimiter>:</delimiter>
+                <identifier>return</identifier> <identifier>False</identifier>
+        <identifier>return</identifier> <identifier>True</identifier>
+
+<identifier>def</identifier> <userIdentifier>main</userIdentifier><delimiter>(</delimiter><delimiter>)</delimiter><delimiter>:</delimiter>
+    <string>"""
+    Función que calcula e imprime la suma de todos los números primos menores o iguales a 5,000,000
+    de manera secuencial.
+    """</string>
+    <userIdentifier>n</userIdentifier> <delimiter>=</delimiter> <integer>5000000</integer>
+    <userIdentifier>result</userIdentifier> <delimiter>=</delimiter> <integer>0</integer>        
+    <identifier>for</identifier> <userIdentifier>i</userIdentifier> <identifier>in</identifier> <userIdentifier>range</userIdentifier> <delimiter>(</delimiter><integer>1</integer><delimiter>,</delimiter> <userIdentifier>n</userIdentifier><operator>+</operator><integer>1</integer><delimiter>)</delimiter><delimiter>:</delimiter>
+        <identifier>if</identifier> <userIdentifier>isPrime</userIdentifier><delimiter>(</delimiter><userIdentifier>i</userIdentifier><delimiter>)</delimiter><delimiter>:</delimiter>
+            <userIdentifier>result</userIdentifier> <delimiter>+=</delimiter> <userIdentifier>i</userIdentifier>
+    <userIdentifier>print</userIdentifier><delimiter>(</delimiter><string>'Resultado: '</string><operator>+</operator> <userIdentifier>str</userIdentifier><delimiter>(</delimiter><userIdentifier>result</userIdentifier><delimiter>)</delimiter><delimiter>)</delimiter>
+
+<commentary># Se llama a la función main y se calcula el tiempo que tarda en ejecutarse    </commentary>
+<userIdentifier>startTime</userIdentifier> <delimiter>=</delimiter> <userIdentifier>time</userIdentifier><delimiter>.</delimiter><userIdentifier>time</userIdentifier><delimiter>(</delimiter><delimiter>)</delimiter>
+<userIdentifier>main</userIdentifier><delimiter>(</delimiter><delimiter>)</delimiter>
+<userIdentifier>finishTime</userIdentifier> <delimiter>=</delimiter> <userIdentifier>time</userIdentifier><delimiter>.</delimiter><userIdentifier>time</userIdentifier><delimiter>(</delimiter><delimiter>)</delimiter> <operator>-</operator> <userIdentifier>startTime</userIdentifier>
+<userIdentifier>print</userIdentifier><delimiter>(</delimiter><string>'Tiempo Final: '</string><operator>+</operator> <userIdentifier>str</userIdentifier><delimiter>(</delimiter><userIdentifier>finishTime</userIdentifier><delimiter>)</delimiter><delimiter>)</delimiter></pre><p></body></html>

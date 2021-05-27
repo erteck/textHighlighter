@@ -3,7 +3,6 @@
 # Erick Alberto Bustos Cruz A01378966
 
 import re
-
     
 def createPatterns(line):
     """
@@ -70,14 +69,9 @@ def createPatterns(line):
     return result
 
 
-def textHighlighter(sExpressions, codeFile, htmlName):
-    """
-    Recibe un documento txt "sExpressions" con expresiones s que describen las categorías léxicas de un lenguaje
-    de programación y un documento "codeFile" con el código a analizar.
-    Como resultado, la función crea un documento "Resultado.html" donde escribe el código de "codeFile"
-    coloreando cada elemento perteneciente a una categoría léxica de un color diferente.
-    """
-    
+def expressionsFile(sExpressions):
+    #global labels
+    #global regexps
     # Documento donde se guardan los equivalentes de las expresiones s a expresiones regulares de python
     exprRegDoc = open('expresionesresultantes.txt','w')
 
@@ -119,9 +113,21 @@ def textHighlighter(sExpressions, codeFile, htmlName):
     # Crear lista con expresiones regulares
     regexps = list(regexpsDic.values())
     
+    return [labels,regexps]
+     
     
+
+def textHighlighter(labels, regexps, codeFile, htmlName):# sExpressions = "../expresionesS.txt"):
+    """
+    Recibe un documento txt "sExpressions" con expresiones s que describen las categorías léxicas de un lenguaje
+    de programación y un documento "codeFile" con el código a analizar.
+    Como resultado, la función crea un documento "Resultado.html" donde escribe el código de "codeFile"
+    coloreando cada elemento perteneciente a una categoría léxica de un color diferente.
+    """
+    
+
     # Crear archivo html donde se va a guardar el resultado
-    f = open(htmlName, 'w')
+    f = open(htmlName, 'w', encoding = 'utf8')
     
     # Establecer un template
     html_template = """
@@ -133,7 +139,7 @@ def textHighlighter(sExpressions, codeFile, htmlName):
     <p><pre>"""
     
     # Abrir archivo con código a analizar
-    code = open(codeFile,'r')
+    code = open(codeFile,'r', encoding = 'utf8')
     
     # Lista donde se guardarán strings procedentes de la segmentación del archivo con código de python
     listSegmentation = [""]
@@ -157,7 +163,6 @@ def textHighlighter(sExpressions, codeFile, htmlName):
     
     # Iterar línea por línea
     for line in code:
-        
         # Variable auxiliar para la detección de strings
         string = False
         
