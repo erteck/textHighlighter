@@ -1,0 +1,37 @@
+
+    <html>
+    <head>
+        <link rel="stylesheet" href="../estilos.css">
+    </head>
+    <body>
+    <p><pre><identifier>from</identifier> <userIdentifier>guitarra</userIdentifier> <identifier>import</identifier> <userIdentifier>Guitarra</userIdentifier>
+<identifier>from</identifier> <userIdentifier>violin</userIdentifier> <identifier>import</identifier> <userIdentifier>Violin</userIdentifier>
+
+
+<identifier>class</identifier> <userIdentifier>Concierto</userIdentifier><delimiter>:</delimiter>
+    
+    <identifier>def</identifier> <userIdentifier>__init__</userIdentifier><delimiter>(</delimiter><userIdentifier>self</userIdentifier><delimiter>,</delimiter> <userIdentifier>name</userIdentifier><delimiter>)</delimiter><delimiter>:</delimiter>
+        <userIdentifier>self</userIdentifier><delimiter>.</delimiter><userIdentifier>name</userIdentifier> <delimiter>=</delimiter> <userIdentifier>name</userIdentifier>
+        <userIdentifier>self</userIdentifier><delimiter>.</delimiter><userIdentifier>__lista_instrumentos</userIdentifier> <delimiter>=</delimiter> <delimiter>[</delimiter><delimiter>]</delimiter>
+    
+    <identifier>def</identifier> <userIdentifier>agregar_instrumento</userIdentifier><delimiter>(</delimiter><userIdentifier>self</userIdentifier><delimiter>,</delimiter> <userIdentifier>instrumento</userIdentifier><delimiter>)</delimiter><delimiter>:</delimiter>
+        <userIdentifier>self</userIdentifier><delimiter>.</delimiter><userIdentifier>__lista_instrumentos</userIdentifier><delimiter>.</delimiter><userIdentifier>append</userIdentifier><delimiter>(</delimiter><userIdentifier>instrumento</userIdentifier><delimiter>)</delimiter>
+    
+    <identifier>def</identifier> <userIdentifier>ejecutar</userIdentifier><delimiter>(</delimiter><userIdentifier>self</userIdentifier><delimiter>,</delimiter> <userIdentifier>mood</userIdentifier><delimiter>)</delimiter><delimiter>:</delimiter>
+        <identifier>for</identifier> <userIdentifier>instrumento</userIdentifier> <identifier>in</identifier> <userIdentifier>self</userIdentifier><delimiter>.</delimiter><userIdentifier>__lista_instrumentos</userIdentifier><delimiter>:</delimiter>
+            <userIdentifier>instrumento</userIdentifier><delimiter>.</delimiter><userIdentifier>tocar</userIdentifier><delimiter>(</delimiter><userIdentifier>mood</userIdentifier><delimiter>)</delimiter>
+
+
+<identifier>def</identifier> <userIdentifier>main</userIdentifier><delimiter>(</delimiter><delimiter>)</delimiter><delimiter>:</delimiter>
+    <userIdentifier>zoom_party</userIdentifier> <delimiter>=</delimiter> <userIdentifier>Concierto</userIdentifier><delimiter>(</delimiter><string>'Zoom Party'</string><delimiter>)</delimiter>
+
+    <commentary>#aqui agregue cualquier otro instrumento que quiera tocar</commentary>
+    <userIdentifier>guitarrita</userIdentifier> <delimiter>=</delimiter> <userIdentifier>Guitarra</userIdentifier><delimiter>(</delimiter><delimiter>)</delimiter>
+    <commentary>#zoom_party.agregar_instrumento(guitarrita)</commentary>
+    <userIdentifier>violincito</userIdentifier> <delimiter>=</delimiter> <userIdentifier>Violin</userIdentifier><delimiter>(</delimiter><delimiter>)</delimiter>
+    <userIdentifier>zoom_party</userIdentifier><delimiter>.</delimiter><userIdentifier>agregar_instrumento</userIdentifier><delimiter>(</delimiter><userIdentifier>violincito</userIdentifier><delimiter>)</delimiter>
+
+    <userIdentifier>zoom_party</userIdentifier><delimiter>.</delimiter><userIdentifier>ejecutar</userIdentifier><delimiter>(</delimiter><string>'energetic'</string><delimiter>)</delimiter>
+
+<identifier>if</identifier> <userIdentifier>__name__</userIdentifier> <operator>==</operator> <string>'__main__'</string><delimiter>:</delimiter>
+    <userIdentifier>main</userIdentifier><delimiter>(</delimiter><delimiter>)</delimiter></pre><p></body></html>

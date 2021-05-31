@@ -1,0 +1,34 @@
+
+    <html>
+    <head>
+        <link rel="stylesheet" href="../estilos.css">
+    </head>
+    <body>
+    <p><pre><commentary># creaciion de un diccionario</commentary>
+<userIdentifier>d</userIdentifier> <delimiter>=</delimiter> <delimiter>{</delimiter><delimiter>}</delimiter>
+
+<commentary># guardar valor 10 con llave 'j'</commentary>
+<userIdentifier>d</userIdentifier><delimiter>[</delimiter><string>'j'</string><delimiter>]</delimiter> <delimiter>=</delimiter> <integer>10</integer>
+
+<commentary># revisar si existe elemento con llave k</commentary>
+<commentary># si existe, sumarle uno a su valor</commentary>
+<commentary># de lo contrario, agregarlo al diccionario con valor de 0</commentary>
+<identifier>if</identifier> <string>'k'</string> <identifier>in</identifier> <userIdentifier>d</userIdentifier><delimiter>:</delimiter>
+  <userIdentifier>d</userIdentifier><delimiter>[</delimiter><string>'k'</string><delimiter>]</delimiter> <delimiter>+=</delimiter> <integer>1</integer>
+<identifier>else</identifier><delimiter>:</delimiter>
+  <userIdentifier>d</userIdentifier><delimiter>[</delimiter><string>'k'</string><delimiter>]</delimiter> <delimiter>=</delimiter> <integer>0</integer>
+
+<commentary># obtener las llaves del diccionario</commentary>
+<userIdentifier>print</userIdentifier><delimiter>(</delimiter><string>'Llaves:'</string><delimiter>)</delimiter>
+<identifier>for</identifier> <userIdentifier>k</userIdentifier> <identifier>in</identifier> <userIdentifier>d</userIdentifier><delimiter>.</delimiter><userIdentifier>keys</userIdentifier><delimiter>(</delimiter><delimiter>)</delimiter><delimiter>:</delimiter>
+  <userIdentifier>print</userIdentifier><delimiter>(</delimiter><userIdentifier>k</userIdentifier><delimiter>)</delimiter>
+
+<commentary># obtener los valores del diccionario</commentary>
+<userIdentifier>print</userIdentifier><delimiter>(</delimiter><string>'Valores:'</string><delimiter>)</delimiter>
+<identifier>for</identifier> <userIdentifier>v</userIdentifier> <identifier>in</identifier> <userIdentifier>d</userIdentifier><delimiter>.</delimiter><userIdentifier>values</userIdentifier><delimiter>(</delimiter><delimiter>)</delimiter><delimiter>:</delimiter>
+  <userIdentifier>print</userIdentifier><delimiter>(</delimiter><userIdentifier>v</userIdentifier><delimiter>)</delimiter>
+
+<commentary># obtener los valores del diccionario</commentary>
+<userIdentifier>print</userIdentifier><delimiter>(</delimiter><string>'Llaves y Valores:'</string><delimiter>)</delimiter>
+<identifier>for</identifier> <userIdentifier>i</userIdentifier> <identifier>in</identifier> <userIdentifier>d</userIdentifier><delimiter>.</delimiter><userIdentifier>items</userIdentifier><delimiter>(</delimiter><delimiter>)</delimiter><delimiter>:</delimiter>
+  <userIdentifier>print</userIdentifier><delimiter>(</delimiter><userIdentifier>i</userIdentifier><delimiter>)</delimiter></pre><p></body></html>

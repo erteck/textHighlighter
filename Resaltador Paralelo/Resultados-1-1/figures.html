@@ -1,0 +1,60 @@
+
+    <html>
+    <head>
+        <link rel="stylesheet" href="../estilos.css">
+    </head>
+    <body>
+    <p><pre><identifier>from</identifier> <userIdentifier>abc</userIdentifier> <identifier>import</identifier> <userIdentifier>ABC</userIdentifier><delimiter>,</delimiter> <userIdentifier>abstractmethod</userIdentifier>
+<identifier>from</identifier> <userIdentifier>math</userIdentifier> <identifier>import</identifier> <userIdentifier>pi</userIdentifier>
+
+<identifier>class</identifier> <userIdentifier>GeometricObject</userIdentifier><delimiter>(</delimiter><userIdentifier>ABC</userIdentifier><delimiter>)</delimiter><delimiter>:</delimiter>
+    <identifier>def</identifier> <userIdentifier>perimeter</userIdentifier><delimiter>(</delimiter><userIdentifier>self</userIdentifier><delimiter>)</delimiter><delimiter>:</delimiter>
+        <identifier>pass</identifier>
+    <identifier>def</identifier> <userIdentifier>area</userIdentifier><delimiter>(</delimiter><userIdentifier>self</userIdentifier><delimiter>)</delimiter><delimiter>:</delimiter>
+        <identifier>pass</identifier>
+
+<identifier>class</identifier> <userIdentifier>Circle</userIdentifier><delimiter>(</delimiter><userIdentifier>GeometricObject</userIdentifier><delimiter>)</delimiter><delimiter>:</delimiter>
+    <identifier>def</identifier> <userIdentifier>__init__</userIdentifier><delimiter>(</delimiter><userIdentifier>self</userIdentifier><delimiter>,</delimiter><userIdentifier>radius</userIdentifier> <delimiter>=</delimiter> <integer>1</integer><float>.0</float><delimiter>)</delimiter><delimiter>:</delimiter>
+        <userIdentifier>self</userIdentifier><delimiter>.</delimiter><userIdentifier>_radius</userIdentifier> <delimiter>=</delimiter> <userIdentifier>radius</userIdentifier>
+    
+    <identifier>def</identifier> <userIdentifier>perimeter</userIdentifier><delimiter>(</delimiter><userIdentifier>self</userIdentifier><delimiter>)</delimiter><delimiter>:</delimiter>
+        <identifier>return</identifier> <userIdentifier>pi</userIdentifier><operator>*</operator><integer>2</integer><operator>*</operator><userIdentifier>self</userIdentifier><delimiter>.</delimiter><userIdentifier>_radius</userIdentifier>
+      
+    <identifier>def</identifier> <userIdentifier>area</userIdentifier><delimiter>(</delimiter><userIdentifier>self</userIdentifier><delimiter>)</delimiter><delimiter>:</delimiter>
+        <identifier>return</identifier> <userIdentifier>pi</userIdentifier><operator>*</operator><delimiter>(</delimiter><delimiter>(</delimiter><userIdentifier>self</userIdentifier><delimiter>.</delimiter><userIdentifier>_radius</userIdentifier><delimiter>)</delimiter><operator>**</operator><integer>2</integer><delimiter>)</delimiter>
+        
+    <identifier>def</identifier> <userIdentifier>__str__</userIdentifier><delimiter>(</delimiter><userIdentifier>self</userIdentifier><delimiter>)</delimiter><delimiter>:</delimiter>
+        <identifier>return</identifier> <userIdentifier>f</userIdentifier><string>'Circle with radius = {self._radius}'</string>
+        
+<identifier>class</identifier> <userIdentifier>Rectangle</userIdentifier><delimiter>(</delimiter><userIdentifier>GeometricObject</userIdentifier><delimiter>)</delimiter><delimiter>:</delimiter>
+    <identifier>def</identifier> <userIdentifier>__init__</userIdentifier><delimiter>(</delimiter><userIdentifier>self</userIdentifier><delimiter>,</delimiter><userIdentifier>width</userIdentifier> <delimiter>=</delimiter> <integer>1</integer><float>.0</float><delimiter>,</delimiter><userIdentifier>length</userIdentifier> <delimiter>=</delimiter> <integer>1</integer><float>.0</float><delimiter>)</delimiter><delimiter>:</delimiter>
+        <userIdentifier>self</userIdentifier><delimiter>.</delimiter><userIdentifier>_width</userIdentifier> <delimiter>=</delimiter> <userIdentifier>width</userIdentifier>
+        <userIdentifier>self</userIdentifier><delimiter>.</delimiter><userIdentifier>_length</userIdentifier> <delimiter>=</delimiter> <userIdentifier>length</userIdentifier>
+    
+    <identifier>def</identifier> <userIdentifier>perimeter</userIdentifier><delimiter>(</delimiter><userIdentifier>self</userIdentifier><delimiter>)</delimiter><delimiter>:</delimiter>
+        <identifier>return</identifier> <integer>2</integer> <operator>*</operator> <userIdentifier>self</userIdentifier><delimiter>.</delimiter><userIdentifier>_length</userIdentifier> <operator>+</operator> <integer>2</integer> <operator>*</operator> <userIdentifier>self</userIdentifier><delimiter>.</delimiter><userIdentifier>_width</userIdentifier>
+      
+    <identifier>def</identifier> <userIdentifier>area</userIdentifier><delimiter>(</delimiter><userIdentifier>self</userIdentifier><delimiter>)</delimiter><delimiter>:</delimiter>
+        <identifier>return</identifier> <userIdentifier>self</userIdentifier><delimiter>.</delimiter><userIdentifier>_width</userIdentifier> <operator>*</operator> <userIdentifier>self</userIdentifier><delimiter>.</delimiter><userIdentifier>_length</userIdentifier>
+    
+    <identifier>def</identifier> <userIdentifier>__str__</userIdentifier><delimiter>(</delimiter><userIdentifier>self</userIdentifier><delimiter>)</delimiter><delimiter>:</delimiter>
+        <identifier>return</identifier> <userIdentifier>f</userIdentifier><string>'Rectangle with length = {self._length} and width = {self._width}'</string>
+    
+<identifier>class</identifier> <userIdentifier>Resizable</userIdentifier><delimiter>(</delimiter><userIdentifier>ABC</userIdentifier><delimiter>)</delimiter><delimiter>:</delimiter>
+    <identifier>def</identifier> <userIdentifier>resize</userIdentifier><delimiter>(</delimiter><userIdentifier>percent</userIdentifier><delimiter>)</delimiter><delimiter>:</delimiter>
+        <identifier>pass</identifier>
+      
+<identifier>class</identifier> <userIdentifier>ResizableCircle</userIdentifier><delimiter>(</delimiter><userIdentifier>Circle</userIdentifier><delimiter>,</delimiter><userIdentifier>Resizable</userIdentifier><delimiter>)</delimiter><delimiter>:</delimiter>
+    <identifier>def</identifier> <userIdentifier>__init__</userIdentifier><delimiter>(</delimiter><userIdentifier>self</userIdentifier><delimiter>,</delimiter><userIdentifier>radius</userIdentifier><delimiter>)</delimiter><delimiter>:</delimiter>
+        <userIdentifier>Circle</userIdentifier><delimiter>.</delimiter><userIdentifier>__init__</userIdentifier><delimiter>(</delimiter><userIdentifier>self</userIdentifier><delimiter>,</delimiter><userIdentifier>radius</userIdentifier><delimiter>)</delimiter>
+    
+    <identifier>def</identifier> <userIdentifier>resize</userIdentifier><delimiter>(</delimiter><userIdentifier>self</userIdentifier><delimiter>,</delimiter><userIdentifier>percent</userIdentifier><delimiter>)</delimiter><delimiter>:</delimiter>
+        <userIdentifier>self</userIdentifier><delimiter>.</delimiter><userIdentifier>_radius</userIdentifier> <delimiter>=</delimiter> <delimiter>(</delimiter><userIdentifier>percent</userIdentifier> <operator>/</operator> <integer>100</integer><delimiter>)</delimiter> <operator>*</operator> <userIdentifier>self</userIdentifier><delimiter>.</delimiter><userIdentifier>_radius</userIdentifier>
+    
+<identifier>class</identifier> <userIdentifier>ResizableRectangle</userIdentifier><delimiter>(</delimiter><userIdentifier>Rectangle</userIdentifier><delimiter>,</delimiter><userIdentifier>Resizable</userIdentifier><delimiter>)</delimiter><delimiter>:</delimiter>
+    <identifier>def</identifier> <userIdentifier>__init__</userIdentifier><delimiter>(</delimiter><userIdentifier>self</userIdentifier><delimiter>,</delimiter><userIdentifier>width</userIdentifier><delimiter>,</delimiter><userIdentifier>length</userIdentifier><delimiter>)</delimiter><delimiter>:</delimiter>
+        <userIdentifier>Rectangle</userIdentifier><delimiter>.</delimiter><userIdentifier>__init__</userIdentifier><delimiter>(</delimiter><userIdentifier>self</userIdentifier><delimiter>,</delimiter><userIdentifier>width</userIdentifier><delimiter>,</delimiter><userIdentifier>length</userIdentifier><delimiter>)</delimiter>
+    
+    <identifier>def</identifier> <userIdentifier>resize</userIdentifier><delimiter>(</delimiter><userIdentifier>self</userIdentifier><delimiter>,</delimiter><userIdentifier>percent</userIdentifier><delimiter>)</delimiter><delimiter>:</delimiter>
+        <userIdentifier>self</userIdentifier><delimiter>.</delimiter><userIdentifier>_width</userIdentifier> <delimiter>=</delimiter> <delimiter>(</delimiter><userIdentifier>percent</userIdentifier> <operator>/</operator> <integer>100</integer><delimiter>)</delimiter> <operator>*</operator> <userIdentifier>self</userIdentifier><delimiter>.</delimiter><userIdentifier>_width</userIdentifier>
+        <userIdentifier>self</userIdentifier><delimiter>.</delimiter><userIdentifier>_length</userIdentifier> <delimiter>=</delimiter> <delimiter>(</delimiter><userIdentifier>percent</userIdentifier> <operator>/</operator> <integer>100</integer><delimiter>)</delimiter> <operator>*</operator> <userIdentifier>self</userIdentifier><delimiter>.</delimiter><userIdentifier>_length</userIdentifier></pre><p></body></html>

@@ -1,0 +1,48 @@
+
+    <html>
+    <head>
+        <link rel="stylesheet" href="../estilos.css">
+    </head>
+    <body>
+    <p><pre><identifier>from</identifier> <userIdentifier>figures</userIdentifier> <identifier>import</identifier> <userIdentifier>GeometricObject</userIdentifier><delimiter>,</delimiter> <userIdentifier>Circle</userIdentifier><delimiter>,</delimiter> <userIdentifier>ResizableCircle</userIdentifier><delimiter>,</delimiter> <userIdentifier>Resizable</userIdentifier><delimiter>,</delimiter> <userIdentifier>Rectangle</userIdentifier><delimiter>,</delimiter> <userIdentifier>ResizableRectangle</userIdentifier>
+
+<identifier>def</identifier> <userIdentifier>print_figure</userIdentifier><delimiter>(</delimiter><userIdentifier>gf</userIdentifier><delimiter>)</delimiter><delimiter>:</delimiter>
+    <userIdentifier>print</userIdentifier><delimiter>(</delimiter><userIdentifier>f</userIdentifier><string>'{gf}, perimeter = {gf.perimeter():.3f}, area = {gf.area():.3f}'</string><delimiter>)</delimiter>
+
+<identifier>def</identifier> <userIdentifier>double_size</userIdentifier><delimiter>(</delimiter><userIdentifier>gf</userIdentifier><delimiter>)</delimiter><delimiter>:</delimiter>
+    <identifier>if</identifier> <userIdentifier>isinstance</userIdentifier><delimiter>(</delimiter><userIdentifier>gf</userIdentifier><delimiter>,</delimiter><userIdentifier>Resizable</userIdentifier><delimiter>)</delimiter><delimiter>:</delimiter>
+        <userIdentifier>gf</userIdentifier><delimiter>.</delimiter><userIdentifier>resize</userIdentifier><delimiter>(</delimiter><integer>200</integer><delimiter>)</delimiter>
+    <identifier>else</identifier><delimiter>:</delimiter>
+      <userIdentifier>print</userIdentifier><delimiter>(</delimiter><string>'Figure cannot be enlarged!'</string><delimiter>)</delimiter>
+
+<userIdentifier>print</userIdentifier><delimiter>(</delimiter><string>'Testing figures'</string><delimiter>)</delimiter>
+<userIdentifier>print</userIdentifier><delimiter>(</delimiter><string>'****************'</string><delimiter>)</delimiter>
+<userIdentifier>c</userIdentifier> <delimiter>=</delimiter> <userIdentifier>Circle</userIdentifier><delimiter>(</delimiter><delimiter>)</delimiter>
+<userIdentifier>print_figure</userIdentifier><delimiter>(</delimiter><userIdentifier>c</userIdentifier><delimiter>)</delimiter>
+<userIdentifier>r</userIdentifier> <delimiter>=</delimiter> <userIdentifier>Rectangle</userIdentifier><delimiter>(</delimiter><integer>10</integer><delimiter>,</delimiter> <integer>20</integer><delimiter>)</delimiter>
+<userIdentifier>print_figure</userIdentifier><delimiter>(</delimiter><userIdentifier>r</userIdentifier><delimiter>)</delimiter>
+
+<userIdentifier>rc</userIdentifier> <delimiter>=</delimiter> <userIdentifier>ResizableCircle</userIdentifier><delimiter>(</delimiter><integer>5</integer><delimiter>)</delimiter>
+<userIdentifier>print_figure</userIdentifier><delimiter>(</delimiter><userIdentifier>rc</userIdentifier><delimiter>)</delimiter>
+<userIdentifier>rr</userIdentifier> <delimiter>=</delimiter> <userIdentifier>ResizableRectangle</userIdentifier><delimiter>(</delimiter><integer>5</integer><delimiter>,</delimiter> <integer>10</integer><delimiter>)</delimiter>
+<userIdentifier>print_figure</userIdentifier><delimiter>(</delimiter><userIdentifier>rr</userIdentifier><delimiter>)</delimiter>
+
+<userIdentifier>print</userIdentifier><delimiter>(</delimiter><string>'\nResizing'</string><delimiter>)</delimiter>
+<userIdentifier>print</userIdentifier><delimiter>(</delimiter><string>'****************'</string><delimiter>)</delimiter>
+<userIdentifier>print</userIdentifier><delimiter>(</delimiter><string>'Before'</string><delimiter>)</delimiter>
+<userIdentifier>print</userIdentifier><delimiter>(</delimiter><userIdentifier>rc</userIdentifier><delimiter>)</delimiter>
+<userIdentifier>print</userIdentifier><delimiter>(</delimiter><userIdentifier>rr</userIdentifier><delimiter>)</delimiter>
+<userIdentifier>print</userIdentifier><delimiter>(</delimiter><string>'After'</string><delimiter>)</delimiter>
+<userIdentifier>rc</userIdentifier><delimiter>.</delimiter><userIdentifier>resize</userIdentifier><delimiter>(</delimiter><integer>10</integer><delimiter>)</delimiter>
+<userIdentifier>rr</userIdentifier><delimiter>.</delimiter><userIdentifier>resize</userIdentifier><delimiter>(</delimiter><integer>150</integer><delimiter>)</delimiter>
+<userIdentifier>print</userIdentifier><delimiter>(</delimiter><userIdentifier>rc</userIdentifier><delimiter>)</delimiter>
+<userIdentifier>print</userIdentifier><delimiter>(</delimiter><userIdentifier>rr</userIdentifier><delimiter>)</delimiter>
+
+<userIdentifier>print</userIdentifier><delimiter>(</delimiter><string>'\nTesting double_size'</string><delimiter>)</delimiter>
+<userIdentifier>print</userIdentifier><delimiter>(</delimiter><string>'****************'</string><delimiter>)</delimiter>
+<userIdentifier>double_size</userIdentifier><delimiter>(</delimiter><userIdentifier>c</userIdentifier><delimiter>)</delimiter>
+<userIdentifier>double_size</userIdentifier><delimiter>(</delimiter><userIdentifier>r</userIdentifier><delimiter>)</delimiter>
+<userIdentifier>double_size</userIdentifier><delimiter>(</delimiter><userIdentifier>rc</userIdentifier><delimiter>)</delimiter>
+<userIdentifier>print</userIdentifier><delimiter>(</delimiter><userIdentifier>rc</userIdentifier><delimiter>)</delimiter>
+<userIdentifier>double_size</userIdentifier><delimiter>(</delimiter><userIdentifier>rr</userIdentifier><delimiter>)</delimiter>
+<userIdentifier>print</userIdentifier><delimiter>(</delimiter><userIdentifier>rr</userIdentifier><delimiter>)</delimiter></pre><p></body></html>

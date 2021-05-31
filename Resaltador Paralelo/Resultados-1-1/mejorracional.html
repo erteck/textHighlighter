@@ -1,0 +1,123 @@
+
+    <html>
+    <head>
+        <link rel="stylesheet" href="../estilos.css">
+    </head>
+    <body>
+    <p><pre><commentary># ----------------------------------------------------------</commentary>
+<commentary>#Erick Alberto Bustos Cruz A01378966</commentary>
+<commentary># </commentary>
+<commentary>#</commentary>
+<commentary># ----------------------------------------------------------</commentary>
+
+<identifier>from</identifier> <userIdentifier>functools</userIdentifier> <identifier>import</identifier> <userIdentifier>total_ordering</userIdentifier>
+<identifier>import</identifier> <userIdentifier>math</userIdentifier> <identifier>as</identifier> <userIdentifier>m</userIdentifier>
+
+<delimiter>@</delimiter><userIdentifier>total_ordering</userIdentifier>
+<identifier>class</identifier> <userIdentifier>Racional</userIdentifier><delimiter>:</delimiter>
+    <string>"""Instancias de esta clase representan números 
+    racionales con un numerador y un denominador.
+    """</string>
+    <identifier>def</identifier> <userIdentifier>__reducir</userIdentifier><delimiter>(</delimiter><userIdentifier>self</userIdentifier><delimiter>)</delimiter><delimiter>:</delimiter>
+        <userIdentifier>GCD</userIdentifier> <delimiter>=</delimiter> <userIdentifier>m</userIdentifier><delimiter>.</delimiter><userIdentifier>gcd</userIdentifier><delimiter>(</delimiter><userIdentifier>int</userIdentifier><delimiter>(</delimiter><userIdentifier>self</userIdentifier><delimiter>.</delimiter><userIdentifier>__numerador</userIdentifier><delimiter>)</delimiter><delimiter>,</delimiter><userIdentifier>int</userIdentifier><delimiter>(</delimiter><userIdentifier>self</userIdentifier><delimiter>.</delimiter><userIdentifier>__denominador</userIdentifier><delimiter>)</delimiter><delimiter>)</delimiter>
+        <userIdentifier>numdor</userIdentifier> <delimiter>=</delimiter> <userIdentifier>self</userIdentifier><delimiter>.</delimiter><userIdentifier>__numerador</userIdentifier> <operator>/</operator> <userIdentifier>GCD</userIdentifier>
+        <userIdentifier>denom</userIdentifier> <delimiter>=</delimiter> <userIdentifier>self</userIdentifier><delimiter>.</delimiter><userIdentifier>__denominador</userIdentifier> <operator>/</operator> <userIdentifier>GCD</userIdentifier>
+        <userIdentifier>self</userIdentifier><delimiter>.</delimiter><userIdentifier>__numerador</userIdentifier> <delimiter>=</delimiter> <userIdentifier>int</userIdentifier><delimiter>(</delimiter><userIdentifier>numdor</userIdentifier><delimiter>)</delimiter>
+        <userIdentifier>self</userIdentifier><delimiter>.</delimiter><userIdentifier>__denominador</userIdentifier> <delimiter>=</delimiter> <userIdentifier>int</userIdentifier><delimiter>(</delimiter><userIdentifier>denom</userIdentifier><delimiter>)</delimiter>
+        
+    <identifier>def</identifier> <userIdentifier>__init__</userIdentifier><delimiter>(</delimiter><userIdentifier>self</userIdentifier><delimiter>,</delimiter><userIdentifier>numerador</userIdentifier><delimiter>,</delimiter><userIdentifier>denominador</userIdentifier><delimiter>)</delimiter><delimiter>:</delimiter>
+      <userIdentifier>self</userIdentifier><delimiter>.</delimiter><userIdentifier>__numerador</userIdentifier> <delimiter>=</delimiter> <userIdentifier>int</userIdentifier><delimiter>(</delimiter><userIdentifier>numerador</userIdentifier><delimiter>)</delimiter>
+      <userIdentifier>self</userIdentifier><delimiter>.</delimiter><userIdentifier>__denominador</userIdentifier> <delimiter>=</delimiter> <userIdentifier>int</userIdentifier><delimiter>(</delimiter><userIdentifier>denominador</userIdentifier><delimiter>)</delimiter>
+      <identifier>if</identifier> <userIdentifier>self</userIdentifier><delimiter>.</delimiter><userIdentifier>__denominador</userIdentifier> <operator><</operator> <integer>0</integer> <identifier>and</identifier> <userIdentifier>self</userIdentifier><delimiter>.</delimiter><userIdentifier>__numerador</userIdentifier> <operator><</operator> <integer>0</integer><delimiter>:</delimiter>
+        <userIdentifier>self</userIdentifier><delimiter>.</delimiter><userIdentifier>__numerador</userIdentifier> <delimiter>=</delimiter> <operator>-</operator><userIdentifier>numerador</userIdentifier>
+        <userIdentifier>self</userIdentifier><delimiter>.</delimiter><userIdentifier>__denominador</userIdentifier> <delimiter>=</delimiter> <operator>-</operator><userIdentifier>denominador</userIdentifier>
+      <identifier>elif</identifier> <userIdentifier>self</userIdentifier><delimiter>.</delimiter><userIdentifier>__denominador</userIdentifier> <operator><</operator> <integer>0</integer> <identifier>and</identifier> <userIdentifier>self</userIdentifier><delimiter>.</delimiter><userIdentifier>__numerador</userIdentifier> <operator>></operator> <integer>0</integer><delimiter>:</delimiter>
+        <userIdentifier>self</userIdentifier><delimiter>.</delimiter><userIdentifier>__numerador</userIdentifier> <delimiter>=</delimiter> <operator>-</operator><userIdentifier>numerador</userIdentifier>
+        <userIdentifier>self</userIdentifier><delimiter>.</delimiter><userIdentifier>__denominador</userIdentifier> <delimiter>=</delimiter> <operator>-</operator><userIdentifier>denominador</userIdentifier>
+      <userIdentifier>Racional</userIdentifier><delimiter>.</delimiter><userIdentifier>__reducir</userIdentifier><delimiter>(</delimiter><userIdentifier>self</userIdentifier><delimiter>)</delimiter>
+      
+    <delimiter>@</delimiter><userIdentifier>property</userIdentifier>
+    <identifier>def</identifier> <userIdentifier>numerador</userIdentifier><delimiter>(</delimiter><userIdentifier>self</userIdentifier><delimiter>)</delimiter><delimiter>:</delimiter>
+      <identifier>return</identifier> <userIdentifier>self</userIdentifier><delimiter>.</delimiter><userIdentifier>__numerador</userIdentifier>
+      
+    <delimiter>@</delimiter><userIdentifier>property</userIdentifier>
+    <identifier>def</identifier> <userIdentifier>denominador</userIdentifier><delimiter>(</delimiter><userIdentifier>self</userIdentifier><delimiter>)</delimiter><delimiter>:</delimiter>
+      <identifier>return</identifier> <userIdentifier>self</userIdentifier><delimiter>.</delimiter><userIdentifier>__denominador</userIdentifier>
+      
+    <delimiter>@</delimiter><userIdentifier>numerador</userIdentifier><delimiter>.</delimiter><userIdentifier>setter</userIdentifier>
+    <identifier>def</identifier> <userIdentifier>numerador</userIdentifier><delimiter>(</delimiter><userIdentifier>self</userIdentifier><delimiter>,</delimiter><userIdentifier>numerador</userIdentifier><delimiter>)</delimiter><delimiter>:</delimiter>
+      <userIdentifier>self</userIdentifier><delimiter>.</delimiter><userIdentifier>__numerador</userIdentifier> <delimiter>=</delimiter> <userIdentifier>numerador</userIdentifier>
+      <identifier>if</identifier> <userIdentifier>self</userIdentifier><delimiter>.</delimiter><userIdentifier>__denominador</userIdentifier> <operator><</operator> <integer>0</integer> <identifier>and</identifier> <userIdentifier>self</userIdentifier><delimiter>.</delimiter><userIdentifier>__numerador</userIdentifier> <operator><</operator> <integer>0</integer><delimiter>:</delimiter>
+        <userIdentifier>self</userIdentifier><delimiter>.</delimiter><userIdentifier>__numerador</userIdentifier> <delimiter>=</delimiter> <operator>-</operator><userIdentifier>numerador</userIdentifier>
+        <commentary>#self.__denominador = -denominador</commentary>
+      <identifier>elif</identifier> <userIdentifier>self</userIdentifier><delimiter>.</delimiter><userIdentifier>__denominador</userIdentifier> <operator><</operator> <integer>0</integer> <identifier>and</identifier> <userIdentifier>self</userIdentifier><delimiter>.</delimiter><userIdentifier>__numerador</userIdentifier> <operator>></operator> <integer>0</integer><delimiter>:</delimiter>
+        <userIdentifier>self</userIdentifier><delimiter>.</delimiter><userIdentifier>__numerador</userIdentifier> <delimiter>=</delimiter> <operator>-</operator> <userIdentifier>numerador</userIdentifier>
+        <commentary>#self.__denominador = -denominador</commentary>
+      <userIdentifier>Racional</userIdentifier><delimiter>.</delimiter><userIdentifier>__reducir</userIdentifier><delimiter>(</delimiter><userIdentifier>self</userIdentifier><delimiter>)</delimiter>
+      
+    <delimiter>@</delimiter><userIdentifier>denominador</userIdentifier><delimiter>.</delimiter><userIdentifier>setter</userIdentifier>
+    <identifier>def</identifier> <userIdentifier>denominador</userIdentifier><delimiter>(</delimiter><userIdentifier>self</userIdentifier><delimiter>,</delimiter><userIdentifier>denominador</userIdentifier><delimiter>)</delimiter><delimiter>:</delimiter>
+      <userIdentifier>self</userIdentifier><delimiter>.</delimiter><userIdentifier>__denominador</userIdentifier> <delimiter>=</delimiter> <userIdentifier>denominador</userIdentifier>
+      <identifier>if</identifier> <userIdentifier>self</userIdentifier><delimiter>.</delimiter><userIdentifier>__denominador</userIdentifier> <operator><</operator> <integer>0</integer> <identifier>and</identifier> <userIdentifier>self</userIdentifier><delimiter>.</delimiter><userIdentifier>__numerador</userIdentifier> <operator><</operator> <integer>0</integer><delimiter>:</delimiter>
+        <commentary>#self.__numerador = -numerador</commentary>
+        <userIdentifier>self</userIdentifier><delimiter>.</delimiter><userIdentifier>__denominador</userIdentifier> <delimiter>=</delimiter> <operator>-</operator><userIdentifier>denominador</userIdentifier>
+      <identifier>elif</identifier> <userIdentifier>self</userIdentifier><delimiter>.</delimiter><userIdentifier>__denominador</userIdentifier> <operator><</operator> <integer>0</integer> <identifier>and</identifier> <userIdentifier>self</userIdentifier><delimiter>.</delimiter><userIdentifier>__numerador</userIdentifier> <operator>></operator> <integer>0</integer><delimiter>:</delimiter>
+        <commentary>#self.__numerador = -numerador</commentary>
+        <userIdentifier>self</userIdentifier><delimiter>.</delimiter><userIdentifier>__denominador</userIdentifier> <delimiter>=</delimiter> <operator>-</operator><userIdentifier>denominador</userIdentifier>
+      <userIdentifier>Racional</userIdentifier><delimiter>.</delimiter><userIdentifier>__reducir</userIdentifier><delimiter>(</delimiter><userIdentifier>self</userIdentifier><delimiter>)</delimiter>
+    
+    <identifier>def</identifier> <userIdentifier>__str__</userIdentifier><delimiter>(</delimiter><userIdentifier>self</userIdentifier><delimiter>)</delimiter><delimiter>:</delimiter>
+      <identifier>return</identifier> <userIdentifier>f</userIdentifier><string>'{self.__numerador}/{self.__denominador}'</string>
+        
+    <identifier>def</identifier> <userIdentifier>__repr__</userIdentifier><delimiter>(</delimiter><userIdentifier>self</userIdentifier><delimiter>)</delimiter><delimiter>:</delimiter>
+      <identifier>return</identifier> <userIdentifier>f</userIdentifier><string>'Racional({self.__numerador}, {self.__denominador})'</string>
+      
+    <identifier>def</identifier> <userIdentifier>__eq__</userIdentifier><delimiter>(</delimiter><userIdentifier>self</userIdentifier><delimiter>,</delimiter> <userIdentifier>otro</userIdentifier><delimiter>)</delimiter><delimiter>:</delimiter>
+      <identifier>return</identifier> <userIdentifier>self</userIdentifier><delimiter>.</delimiter><userIdentifier>__numerador</userIdentifier><operator>/</operator><userIdentifier>self</userIdentifier><delimiter>.</delimiter><userIdentifier>__denominador</userIdentifier> <operator>==</operator> <userIdentifier>otro</userIdentifier><delimiter>.</delimiter><userIdentifier>__numerador</userIdentifier><operator>/</operator><userIdentifier>otro</userIdentifier><delimiter>.</delimiter><userIdentifier>__denominador</userIdentifier>
+    
+    <identifier>def</identifier> <userIdentifier>__lt__</userIdentifier><delimiter>(</delimiter><userIdentifier>self</userIdentifier><delimiter>,</delimiter> <userIdentifier>otro</userIdentifier><delimiter>)</delimiter><delimiter>:</delimiter>
+      <identifier>if</identifier> <userIdentifier>self</userIdentifier><delimiter>.</delimiter><userIdentifier>__numerador</userIdentifier><operator>/</operator><userIdentifier>self</userIdentifier><delimiter>.</delimiter><userIdentifier>__denominador</userIdentifier> <operator><</operator> <userIdentifier>otro</userIdentifier><delimiter>.</delimiter><userIdentifier>__numerador</userIdentifier><operator>/</operator><userIdentifier>otro</userIdentifier><delimiter>.</delimiter><userIdentifier>__denominador</userIdentifier><delimiter>:</delimiter>
+        <identifier>return</identifier> <identifier>True</identifier>
+      <identifier>if</identifier> <userIdentifier>self</userIdentifier><delimiter>.</delimiter><userIdentifier>__numerador</userIdentifier><operator>/</operator><userIdentifier>self</userIdentifier><delimiter>.</delimiter><userIdentifier>__denominador</userIdentifier> <operator><</operator> <userIdentifier>otro</userIdentifier><delimiter>.</delimiter><userIdentifier>__numerador</userIdentifier><operator>/</operator><userIdentifier>otro</userIdentifier><delimiter>.</delimiter><userIdentifier>__denominador</userIdentifier><delimiter>:</delimiter>
+        <identifier>return</identifier> <identifier>False</identifier>
+        
+    <identifier>def</identifier> <userIdentifier>__neg__</userIdentifier><delimiter>(</delimiter><userIdentifier>self</userIdentifier><delimiter>)</delimiter><delimiter>:</delimiter>
+      <userIdentifier>numerador</userIdentifier> <delimiter>=</delimiter> <operator>-</operator> <userIdentifier>self</userIdentifier><delimiter>.</delimiter><userIdentifier>__numerador</userIdentifier>
+      <userIdentifier>denominador</userIdentifier> <delimiter>=</delimiter> <userIdentifier>self</userIdentifier><delimiter>.</delimiter><userIdentifier>__denominador</userIdentifier>
+      <userIdentifier>ans</userIdentifier> <delimiter>=</delimiter> <userIdentifier>Racional</userIdentifier><delimiter>(</delimiter><userIdentifier>numerador</userIdentifier><delimiter>,</delimiter><userIdentifier>denominador</userIdentifier><delimiter>)</delimiter>
+      <identifier>return</identifier> <userIdentifier>ans</userIdentifier>
+      
+    <identifier>def</identifier> <userIdentifier>inverso</userIdentifier><delimiter>(</delimiter><userIdentifier>self</userIdentifier><delimiter>)</delimiter><delimiter>:</delimiter>
+      <userIdentifier>ans</userIdentifier> <delimiter>=</delimiter> <userIdentifier>Racional</userIdentifier><delimiter>(</delimiter><userIdentifier>self</userIdentifier><delimiter>.</delimiter><userIdentifier>__denominador</userIdentifier><delimiter>,</delimiter><userIdentifier>self</userIdentifier><delimiter>.</delimiter><userIdentifier>__numerador</userIdentifier><delimiter>)</delimiter>
+      <userIdentifier>Racional</userIdentifier><delimiter>.</delimiter><userIdentifier>__reducir</userIdentifier><delimiter>(</delimiter><userIdentifier>ans</userIdentifier><delimiter>)</delimiter>
+      <identifier>return</identifier> <userIdentifier>ans</userIdentifier>
+      
+    <identifier>def</identifier> <userIdentifier>__add__</userIdentifier><delimiter>(</delimiter><userIdentifier>self</userIdentifier><delimiter>,</delimiter> <userIdentifier>otro</userIdentifier><delimiter>)</delimiter><delimiter>:</delimiter>
+      <identifier>if</identifier> <userIdentifier>self</userIdentifier><delimiter>.</delimiter><userIdentifier>__denominador</userIdentifier> <operator>==</operator> <userIdentifier>otro</userIdentifier><delimiter>.</delimiter><userIdentifier>__denominador</userIdentifier><delimiter>:</delimiter>
+        <identifier>return</identifier> <userIdentifier>Racional</userIdentifier><delimiter>(</delimiter><userIdentifier>self</userIdentifier><delimiter>.</delimiter><userIdentifier>__numerador</userIdentifier> <operator>+</operator> <userIdentifier>otro</userIdentifier><delimiter>.</delimiter><userIdentifier>__numerador</userIdentifier><delimiter>,</delimiter> <userIdentifier>self</userIdentifier><delimiter>.</delimiter><userIdentifier>__denominador</userIdentifier><delimiter>)</delimiter>
+      <identifier>else</identifier><delimiter>:</delimiter>
+        <userIdentifier>lcm</userIdentifier> <delimiter>=</delimiter> <userIdentifier>int</userIdentifier><delimiter>(</delimiter><userIdentifier>abs</userIdentifier><delimiter>(</delimiter><userIdentifier>self</userIdentifier><delimiter>.</delimiter><userIdentifier>__denominador</userIdentifier><operator>*</operator><userIdentifier>otro</userIdentifier><delimiter>.</delimiter><userIdentifier>__denominador</userIdentifier><delimiter>)</delimiter> <operator>//</operator> <userIdentifier>m</userIdentifier><delimiter>.</delimiter><userIdentifier>gcd</userIdentifier><delimiter>(</delimiter><userIdentifier>self</userIdentifier><delimiter>.</delimiter><userIdentifier>__denominador</userIdentifier><delimiter>,</delimiter> <userIdentifier>otro</userIdentifier><delimiter>.</delimiter><userIdentifier>__denominador</userIdentifier><delimiter>)</delimiter><delimiter>)</delimiter>
+        <userIdentifier>numerador_nuevo</userIdentifier> <delimiter>=</delimiter> <userIdentifier>int</userIdentifier><delimiter>(</delimiter><delimiter>(</delimiter><userIdentifier>lcm</userIdentifier><operator>/</operator><userIdentifier>self</userIdentifier><delimiter>.</delimiter><userIdentifier>__denominador</userIdentifier><delimiter>)</delimiter> <operator>*</operator> <userIdentifier>self</userIdentifier><delimiter>.</delimiter><userIdentifier>__numerador</userIdentifier> <operator>+</operator> <delimiter>(</delimiter><userIdentifier>lcm</userIdentifier><operator>/</operator><userIdentifier>otro</userIdentifier><delimiter>.</delimiter><userIdentifier>__denominador</userIdentifier><delimiter>)</delimiter> <operator>*</operator> <userIdentifier>otro</userIdentifier><delimiter>.</delimiter><userIdentifier>__numerador</userIdentifier> <delimiter>)</delimiter>
+        <identifier>return</identifier> <userIdentifier>Racional</userIdentifier><delimiter>(</delimiter><userIdentifier>numerador_nuevo</userIdentifier><delimiter>,</delimiter> <userIdentifier>lcm</userIdentifier><delimiter>)</delimiter>
+    
+    <identifier>def</identifier> <userIdentifier>__sub__</userIdentifier><delimiter>(</delimiter><userIdentifier>self</userIdentifier><delimiter>,</delimiter> <userIdentifier>otro</userIdentifier><delimiter>)</delimiter><delimiter>:</delimiter>
+      <identifier>if</identifier> <userIdentifier>self</userIdentifier><delimiter>.</delimiter><userIdentifier>__denominador</userIdentifier> <operator>==</operator> <userIdentifier>otro</userIdentifier><delimiter>.</delimiter><userIdentifier>__denominador</userIdentifier><delimiter>:</delimiter>
+        <identifier>return</identifier> <userIdentifier>Racional</userIdentifier><delimiter>(</delimiter><userIdentifier>self</userIdentifier><delimiter>.</delimiter><userIdentifier>__numerador</userIdentifier> <operator>-</operator> <userIdentifier>otro</userIdentifier><delimiter>.</delimiter><userIdentifier>__numerador</userIdentifier><delimiter>,</delimiter> <userIdentifier>self</userIdentifier><delimiter>.</delimiter><userIdentifier>__denominador</userIdentifier><delimiter>)</delimiter>
+      <identifier>else</identifier><delimiter>:</delimiter>
+        <userIdentifier>lcm</userIdentifier> <delimiter>=</delimiter> <userIdentifier>int</userIdentifier><delimiter>(</delimiter><userIdentifier>abs</userIdentifier><delimiter>(</delimiter><userIdentifier>self</userIdentifier><delimiter>.</delimiter><userIdentifier>__denominador</userIdentifier><operator>*</operator><userIdentifier>otro</userIdentifier><delimiter>.</delimiter><userIdentifier>__denominador</userIdentifier><delimiter>)</delimiter> <operator>//</operator> <userIdentifier>m</userIdentifier><delimiter>.</delimiter><userIdentifier>gcd</userIdentifier><delimiter>(</delimiter><userIdentifier>self</userIdentifier><delimiter>.</delimiter><userIdentifier>__denominador</userIdentifier><delimiter>,</delimiter> <userIdentifier>otro</userIdentifier><delimiter>.</delimiter><userIdentifier>__denominador</userIdentifier><delimiter>)</delimiter><delimiter>)</delimiter>
+        <userIdentifier>numerador_nuevo</userIdentifier> <delimiter>=</delimiter> <userIdentifier>int</userIdentifier><delimiter>(</delimiter><delimiter>(</delimiter><userIdentifier>lcm</userIdentifier><operator>/</operator><userIdentifier>self</userIdentifier><delimiter>.</delimiter><userIdentifier>__denominador</userIdentifier><delimiter>)</delimiter> <operator>*</operator> <userIdentifier>self</userIdentifier><delimiter>.</delimiter><userIdentifier>__numerador</userIdentifier> <operator>-</operator> <delimiter>(</delimiter><userIdentifier>lcm</userIdentifier><operator>/</operator><userIdentifier>otro</userIdentifier><delimiter>.</delimiter><userIdentifier>__denominador</userIdentifier><delimiter>)</delimiter> <operator>*</operator> <userIdentifier>otro</userIdentifier><delimiter>.</delimiter><userIdentifier>__numerador</userIdentifier> <delimiter>)</delimiter>
+        <identifier>return</identifier> <userIdentifier>Racional</userIdentifier><delimiter>(</delimiter><userIdentifier>numerador_nuevo</userIdentifier><delimiter>,</delimiter> <userIdentifier>lcm</userIdentifier><delimiter>)</delimiter>
+        
+    <identifier>def</identifier> <userIdentifier>__mul__</userIdentifier><delimiter>(</delimiter><userIdentifier>self</userIdentifier><delimiter>,</delimiter><userIdentifier>otro</userIdentifier><delimiter>)</delimiter><delimiter>:</delimiter>
+      <userIdentifier>numerador</userIdentifier> <delimiter>=</delimiter> <userIdentifier>self</userIdentifier><delimiter>.</delimiter><userIdentifier>__numerador</userIdentifier> <operator>*</operator> <userIdentifier>otro</userIdentifier><delimiter>.</delimiter><userIdentifier>__numerador</userIdentifier>
+      <userIdentifier>denominador</userIdentifier> <delimiter>=</delimiter> <userIdentifier>self</userIdentifier><delimiter>.</delimiter><userIdentifier>__denominador</userIdentifier> <operator>*</operator> <userIdentifier>otro</userIdentifier><delimiter>.</delimiter><userIdentifier>__denominador</userIdentifier>
+      <userIdentifier>ans</userIdentifier> <delimiter>=</delimiter> <userIdentifier>Racional</userIdentifier><delimiter>(</delimiter><userIdentifier>numerador</userIdentifier><delimiter>,</delimiter><userIdentifier>denominador</userIdentifier><delimiter>)</delimiter>
+      <userIdentifier>Racional</userIdentifier><delimiter>.</delimiter><userIdentifier>__reducir</userIdentifier><delimiter>(</delimiter><userIdentifier>ans</userIdentifier><delimiter>)</delimiter>
+      <identifier>return</identifier> <userIdentifier>ans</userIdentifier>
+    
+    <identifier>def</identifier> <userIdentifier>__truediv__</userIdentifier><delimiter>(</delimiter><userIdentifier>self</userIdentifier><delimiter>,</delimiter><userIdentifier>otro</userIdentifier><delimiter>)</delimiter><delimiter>:</delimiter>
+      <userIdentifier>numerador</userIdentifier> <delimiter>=</delimiter> <userIdentifier>self</userIdentifier><delimiter>.</delimiter><userIdentifier>__numerador</userIdentifier> <operator>*</operator> <userIdentifier>otro</userIdentifier><delimiter>.</delimiter><userIdentifier>__denominador</userIdentifier>
+      <userIdentifier>denominador</userIdentifier> <delimiter>=</delimiter> <userIdentifier>self</userIdentifier><delimiter>.</delimiter><userIdentifier>__denominador</userIdentifier> <operator>*</operator> <userIdentifier>otro</userIdentifier><delimiter>.</delimiter><userIdentifier>__numerador</userIdentifier>
+      <userIdentifier>ans</userIdentifier> <delimiter>=</delimiter> <userIdentifier>Racional</userIdentifier><delimiter>(</delimiter><userIdentifier>numerador</userIdentifier><delimiter>,</delimiter><userIdentifier>denominador</userIdentifier><delimiter>)</delimiter>
+      <userIdentifier>Racional</userIdentifier><delimiter>.</delimiter><userIdentifier>__reducir</userIdentifier><delimiter>(</delimiter><userIdentifier>ans</userIdentifier><delimiter>)</delimiter>
+      <identifier>return</identifier> <userIdentifier>ans</userIdentifier></pre><p></body></html>
