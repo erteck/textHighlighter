@@ -3,6 +3,49 @@
 # Erick Alberto Bustos Cruz A01378966
 
 import re
+import os
+
+def nameHTML(file):
+    """
+    Función que recibe un string con terminación .py
+    y la cambia por la terminación .html
+    """
+    fileName = os.path.split(file) 
+    return fileName[1][:-2] + "html"
+
+def findFiles(directory,files):
+    """
+    Función que recibe un string  "directory" el cual contiene la dirección de un directorio
+    y una lista de strings denominada "files". La función agrega las direcciones de todos los 
+    archivos con extensión ".py" presentes en el directorio dado a la lista "files",
+    incluyendo aquellos en directorios anidados. Al final del proceso, se regresa la lista
+    "files".
+    """
+    os.chdir(directory)
+    currentDirectory = os.listdir(directory) #['Codigos', 'Imagenes', 'code.py', 'imagen.jpg']
+    for element in currentDirectory:
+        if '.py' in element:
+            # Agregar path de archivo .py a files
+            files.append(os.getcwd() + '\\'+ element)
+        elif ('.' not in element) and ('__pycache__' not in element):
+            # Llamada recursiva para explorar directorios interiores
+            files  = findFiles(os.getcwd() + '\\'+ element,files)
+            # Regresa al directorio anterior
+            os.chdir(os.path.dirname(os.getcwd()))
+    return files
+        
+def defineDirectory(directoryName):
+    """
+    Recibe un string "directoryName" con el nombre de un subdirectorio en el directorio actual,
+    revisa si existe ya un directorio con dicho nombre y en caso de ser así regresa 
+    "directoryName" concatenado con -1. En caso contrario, regresa únicamente "directoryName"
+    """
+    if directoryName not in os.listdir(os.getcwd()):  
+        #print(directoryName)
+        return directoryName
+    else:
+        directoryName += "-1"
+        return defineDirectory(directoryName)
     
 def createPatterns(line):
     """
@@ -274,5 +317,4 @@ def textHighlighter(labels, regexps, codeFile, htmlName):# sExpressions = "../ex
     f.close()
     
 
-#textHighlighter('expresionesS.txt','ejemplo.py')
 

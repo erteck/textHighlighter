@@ -1,57 +1,32 @@
-import ResaltadorTexto
+import resaltadorTexto as rt
 import os
 import functools
 from concurrent.futures import ProcessPoolExecutor
 import time
 
-files = [] # directorios de los códigos
 
-
-def nameHTML(file):
-    fileName = os.path.split(file) 
-    return fileName[1][:-2] + "html"
-
-def findFiles(directory):
-    os.chdir(directory)
-    currentDirectory = os.listdir(directory) #['Codigos', 'Imagenes', 'code.py', 'imagen.jpg']
-    for element in currentDirectory:
-        if '.py' in element:
-            # Agregar path de archivo .py a files
-            files.append(os.getcwd() + '\\'+ element)
-        elif ('.' not in element) and ('__pycache__' not in element):
-            # Llamada recursiva para explorar directorios interiores
-            findFiles(os.getcwd() + '\\'+ element)
-            # Regresa al directorio anterior
-            os.chdir(os.path.dirname(os.getcwd()))
-        
-def defineDirectory(directoryName):
-    if directoryName not in os.listdir(os.getcwd()):  
-        #print(directoryName)
-        return directoryName
-    else:
-        directoryName += "-1"
-        return defineDirectory(directoryName)
 
 def main(directory,sExpressions,cores):
     directoryName = "Resultados"
-    directoryName = defineDirectory(directoryName)
+    directoryName = rt.defineDirectory(directoryName)
     #print(type(newDirectory))
+   
+    data = rt.expressionsFile(sExpressions)
+    htmlNames = []
+    files = rt.findFiles(directory,[])
     chunks = len(files)//cores
     if chunks < 1:
         chunks = 1
-    data = ResaltadorTexto.expressionsFile(sExpressions)
-    htmlNames = []
-    findFiles(directory)
     os.mkdir(directoryName)
     os.chdir(directoryName)
     for name in files:
-        htmlNames.append(nameHTML(name))
+        htmlNames.append(rt.nameHTML(name))
     #with ProcessPoolExecutor(max_workers=6) as executor:
     #    fileNames = executor.map(nameHTML, files, chunksize = chunks)
     #for name in fileNames:
     #    htmlNames.append(name)
     with ProcessPoolExecutor(max_workers=6) as executor:        
-        newFun = functools.partial(ResaltadorTexto.textHighlighter, data[0], data[1])
+        newFun = functools.partial(rt.textHighlighter, data[0], data[1])
         executor.map(newFun, files, htmlNames, chunksize = chunks)
     
         
