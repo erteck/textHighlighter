@@ -41,8 +41,8 @@ def main(directory,sExpressions,fileExtension):
 # Permite marcar el tiempo de inicio de la ejecución del programa.      
 startTime = time.time()
 # Llama al método main proporcionándole las expresiones-s y la extensión del archivo.
-main('C:\\Users\\Jacqueline Zavala\\Documents\\GitHub\\textHighlighter\\Resaltador Paralelo\\Prueba', 'expresionesS.txt', '.py')
-#main(os.getcwd(),'expresionesS.txt', '.py')
+#main('d:\\Development\\GitHub\\textHighlighter2\\Resaltador Paralelo\\Prueba', 'expresionesS.txt', '.py')
+main(os.getcwd(),'expresionesS.txt', '.py')
 # Permite marcar el tiempo final de la ejecución del programa.     
 finishTime = time.time() - startTime
 # Imprime el tiempo de ejecución del programa.

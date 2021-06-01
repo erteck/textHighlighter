@@ -196,6 +196,9 @@ def textHighlighter(labels, regexps, codeFile, htmlName):# sExpressions = "../ex
     # Variable auxiliar para la detección de comentarios
     comment = False
     
+    # 
+    lineComment = False
+    
     # Variable que permite detectar si un string o comentario empieza y termina con
     # el mismo tipo de comilla
     actualQuotationMark = ""
@@ -209,22 +212,28 @@ def textHighlighter(labels, regexps, codeFile, htmlName):# sExpressions = "../ex
     
     # Iterar línea por línea
     for line in code:
+        matchwithprevious = None
+        lineComment = False
+        #print(listSegmentation)
+       
         # Variable auxiliar para la detección de strings
         string = False
         
         # Procesar caracter por caracter
         for character in range(0,len(line)):
-            
-            print(line[character])
+            #print('LA COMILLA ACTUAL ES: ' + actualQuotationMark)
+            #print('PROCESANDO: ' + line[character])
+            #print(line[character])
             # Al detectar el final de un string sencillo
             if ((line[character] == '"') or (line[character] == "'")) and string and (line[character] == actualQuotationMark):
-                
+                #print('AGREGADO CON UNO: ' + line[character])
                 listSegmentation[-1] += line[character]
                 string = False
                 actualQuotationMark = ""
                 
             # Al detectar una comilla por primera vez determinar si es un string normal o multi-línea
-            elif ((line[character] == '"') or (line[character] == "'")) and (not comment) and (matchwithprevious is None or delimiter) and not string:
+            elif ((line[character] == '"') or (line[character] == "'")) and (not comment) and (matchwithprevious is None or delimiter) and not string and not lineComment:
+                #print('AGREGADO CON DOS: ' + line[character])
                 delimiter = False
                 quotationMCounter = 1
                 actualQuotationMark = line[character]
@@ -232,7 +241,7 @@ def textHighlighter(labels, regexps, codeFile, htmlName):# sExpressions = "../ex
                  
                 consecutiveQuotMarks = 0
                 seenCharaters = 0
-                
+                #print(line[character:])
                 # Checar si hay tres comillas seguidas
                 for m in range(character,len(line)):
                     if  line[m] == actualQuotationMark and seenCharaters <= 2:
@@ -242,12 +251,15 @@ def textHighlighter(labels, regexps, codeFile, htmlName):# sExpressions = "../ex
                         break
     
                 if consecutiveQuotMarks == 3:
+                    #print("ES DE BLOQUEEEEE " + str(consecutiveQuotMarks))
                     comment = True
                 else:
+                   # print("ES DE STRINGGGGGGGG"+ str(consecutiveQuotMarks))
                     string = True
             
             # Si detecté un string/comentario multi-línea, manejo de comillas
-            elif (comment) and ((line[character] == '"') or (line[character] == "'")) and (line[character] == actualQuotationMark):
+            elif comment and ((line[character] == '"') or (line[character] == "'")) and (line[character] == actualQuotationMark):
+                #print('AGREGADO CON TRES: ' + line[character])
                 listSegmentation[-1] += line[character]
                 
                 # Verificar si hay tres comillas seguidas (para finalizar el comentario)
@@ -273,27 +285,37 @@ def textHighlighter(labels, regexps, codeFile, htmlName):# sExpressions = "../ex
             
             # Agregar el contenido de un string o comentario siempre que no sean las comillas que lo delimitan
             elif string or comment:
+                #print('AGREGADO CON CUATRO: ' + line[character])
                 listSegmentation[-1] += line[character]
                 
             # Identificar cualquier otro elemento perteneciente a categorías léxicas diferentes a los strings
             # verificándolo con las expresiones regulares
             elif line[character] != '\n': 
+                
                 for k in range(0, len(regexps)):
+                    #print(regexps[k])
                     pattern = re.compile(regexps[k])
                     matchwithprevious = re.fullmatch(pattern, listSegmentation[-1]+line[character])
                     if matchwithprevious is not None:
                         if labels[k] in ['delimiter','operator']:
                             delimiter = True
+                        elif labels[k] in ['commentary']:
+                            lineComment = True
                         listSegmentation[-1] += line[character]
+                        #print('AGREGADO CON CINCO: ' + line[character])
                         break
             
             # Agregar saltos de línea        
             elif line[character] == '\n': 
+                #print('AGREGADO CON SEIS: ' + line[character])
                 listSegmentation.append(line[character])
 
             # Agregar caracteres que no entran en ninguna categoría léxica por si solos
             if (matchwithprevious is None) and line[character] not in ["'",'"','\n'] and (not comment and not string): 
+                #print('AGREGADO CON SIETE: ' + line[character])
                 listSegmentation.append(line[character])
+            #else:
+                #print('NO AGREGADO: ' + line[character])
     code.close()
     
     # Iterar sobre la lista, identificar expresiones regulares y  agregarlas al template

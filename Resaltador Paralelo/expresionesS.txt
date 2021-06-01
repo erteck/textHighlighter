@@ -1,4 +1,4 @@
-string: (+ (. \" $ \") (. \' $ \') (. \" \" \" (* (+ $ \n)) \" \" \") (. \' \' \' (* (+ $ \n)) \' \' \'))
+string: (+ (. \" \" \" (* (+ . \n)) \" \" \") (. \' \' \' (* (+ . \n)) \' \' \') (. \" (* [^"\n]) \") (. \' (* [^'\n]) \'))
 identifier: (+ (. F a l s e) (. N o n e) (. T r u e) (. a n d) (. a s) (. a s s e r t) (. a s y n c) (. a w a i t) (. b r e a k) (. c l a s s) (. c o n t i n u e) (. d e f) (. d e l) (. e l i f) (. e l s e) (. e x c e p t) (. f i n a l l y) (. f o r) (. f r o m) (. g l o b a l) (. i f) (. i m p o r t) (. i n) (. i s) (. l a m b d a) (. n o n l o c a l) (. n o t) (. o r) (. p a s s) (. r a i s e) (. r e t u r n) (. t r y) (. w h i l e) (. w i t h) (. y i e l d))
 delimiter: (+ \( \) \[ \] \{ \} \. \, \: \; \@ (. (+ 8 \+ \- \* \/ \% \& \| \^ (. \/ \/) (. \* \*) (. \< \<) (. \> \>)) \=))
 operator: (+ \- \+ \* \/ (. \/ \/) \% (. \* \*) (. (+ \= \! \< \>) \=) \> \< \& \| \~ \^ (. \< \<) (. \> \>) (. a n d) (. i n) (. i s) (. n o t) (. o r))
