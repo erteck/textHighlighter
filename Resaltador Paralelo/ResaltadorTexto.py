@@ -8,33 +8,28 @@ import os
 def nameHTML(file):
     """
     Función que recibe un string con terminación .py
-    la cual cambia por la terminación .html
+    y la cambia por la terminación .html
     """
     fileName = os.path.split(file) 
     return fileName[1][:-2] + "html"
 
-def findFiles(directory,files, extension):
+def findFiles(directory,files):
     """
     Función que recibe un string  "directory" el cual contiene la dirección de un directorio
     y una lista de strings denominada "files". La función agrega las direcciones de todos los 
-    archivos con extensión "extension" presentes en el directorio dado a la lista "files",
+    archivos con extensión ".py" presentes en el directorio dado a la lista "files",
     incluyendo aquellos en directorios anidados. Al final del proceso, se regresa la lista
     "files".
-    """  
-    # Instanciarse en el directorio actual
+    """
     os.chdir(directory)
-    
-    # Listar elementos del dorectorio actual
-    currentDirectory = os.listdir(directory)
-    
-    # Iterar sobre elementos
+    currentDirectory = os.listdir(directory) #['Codigos', 'Imagenes', 'code.py', 'imagen.jpg']
     for element in currentDirectory:
-        if extension in element:
+        if '.py' in element:
             # Agregar path de archivo .py a files
             files.append(os.getcwd() + '\\'+ element)
         elif ('.' not in element) and ('__pycache__' not in element):
             # Llamada recursiva para explorar directorios interiores
-            files  = findFiles(os.getcwd() + '\\'+ element, files, extension)
+            files  = findFiles(os.getcwd() + '\\'+ element,files)
             # Regresa al directorio anterior
             os.chdir(os.path.dirname(os.getcwd()))
     return files
@@ -46,6 +41,7 @@ def defineDirectory(directoryName):
     "directoryName" concatenado con -1. En caso contrario, regresa únicamente "directoryName"
     """
     if directoryName not in os.listdir(os.getcwd()):  
+        #print(directoryName)
         return directoryName
     else:
         directoryName += "-1"
