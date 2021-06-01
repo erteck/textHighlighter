@@ -10,11 +10,11 @@ import time
 # regresar a dir anterior os.chdir(os.path.dirname(os.getcwd()))
 #>>> os.mkdir('Christmas Photos')
 
-def main(directory,sExpressions):
+def main(directory,sExpressions, extension):
     directoryName = "Resultados"
     directoryName = rt.defineDirectory(directoryName)
     data = rt.expressionsFile(sExpressions)
-    files = rt.findFiles(directory,[])
+    files = rt.findFiles(directory,[], extension)
     os.mkdir(directoryName)
     os.chdir(directoryName) 
     for file in files:
@@ -23,6 +23,6 @@ def main(directory,sExpressions):
 
       
 startTime = time.time()
-main(os.getcwd(),'expresionesS.txt')
+main(os.getcwd(),'expresionesS.txt', '.py')
 finishTime = time.time() - startTime
 print('Tiempo de Ejecución: '+ str(finishTime))
