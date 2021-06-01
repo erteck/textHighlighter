@@ -1,4 +1,4 @@
-import resaltadorTexto as rt
+import resaltador as rt
 import os
 import time
 
