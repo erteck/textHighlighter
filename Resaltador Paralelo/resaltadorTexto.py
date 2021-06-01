@@ -8,7 +8,7 @@ import os
 def nameHTML(file):
     """
     Función que recibe un string con terminación .py
-    y la cambia por la terminación .html
+    la cual cambia por la terminación .html
     """
     fileName = os.path.split(file) 
     return fileName[1][:-2] + "html"
@@ -16,13 +16,18 @@ def nameHTML(file):
 def findFiles(directory,files, extension):
     """
     Función que recibe un string  "directory" el cual contiene la dirección de un directorio
-    y una lista de strings denominada "files". La función agrega las direcciones de todos los 
-    archivos con extensión ".py" presentes en el directorio dado a la lista "files",
+    y una lista de strings denominada "files". La función agrega las direcciones de todos los
+    archivos con extensión "extension" presentes en el directorio dado a la lista "files",
     incluyendo aquellos en directorios anidados. Al final del proceso, se regresa la lista
     "files".
     """
+    # Instanciarse en el directorio actual
     os.chdir(directory)
-    currentDirectory = os.listdir(directory) #['Codigos', 'Imagenes', 'code.py', 'imagen.jpg']
+    
+    # Listar elementos del dorectorio actual
+    currentDirectory = os.listdir(directory)
+    
+    # Iterar sobre elementos
     for element in currentDirectory:
         if extension in element:
             # Agregar path de archivo .py a files
@@ -41,7 +46,6 @@ def defineDirectory(directoryName):
     "directoryName" concatenado con -1. En caso contrario, regresa únicamente "directoryName"
     """
     if directoryName not in os.listdir(os.getcwd()):  
-        #print(directoryName)
         return directoryName
     else:
         directoryName += "-1"
@@ -167,7 +171,6 @@ def textHighlighter(labels, regexps, codeFile, htmlName):# sExpressions = "../ex
     Como resultado, la función crea un documento "Resultado.html" donde escribe el código de "codeFile"
     coloreando cada elemento perteneciente a una categoría léxica de un color diferente.
     """
-    
 
     # Crear archivo html donde se va a guardar el resultado
     f = open(htmlName, 'w', encoding = 'utf8')
