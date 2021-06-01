@@ -24,7 +24,7 @@ def main(directory,sExpressions,cores, fileExtension):
     # Nombre tentativo del directorio donde se almacenarán los códigos resaltados 
     directoryName = "Resultados"
     # Permite definir el nombre del directorio que se creará para almacenar los scripts resaltados.
-    directoryName = rt.defineDirectory(directoryName) 
+    directoryName = rt.defineDirectory(directoryName, directory) 
     # Lectura de las expresiones-s que permiten identificar las categorías léxicas del lenguaje.
     data = rt.expressionsFile(sExpressions)
     # Permite almacenar los nombres que se les asignarán a los archivos html resaltados.

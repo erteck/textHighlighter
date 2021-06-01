@@ -39,17 +39,17 @@ def findFiles(directory,files, extension):
             os.chdir(os.path.dirname(os.getcwd()))
     return files
         
-def defineDirectory(directoryName):
+def defineDirectory(directoryName, currentDirectory):
     """
     Recibe un string "directoryName" con el nombre de un subdirectorio en el directorio actual,
     revisa si existe ya un directorio con dicho nombre y en caso de ser así regresa 
     "directoryName" concatenado con -1. En caso contrario, regresa únicamente "directoryName"
     """
-    if directoryName not in os.listdir(os.getcwd()):  
+    if directoryName not in os.listdir(currentDirectory):  
         return directoryName
     else:
         directoryName += "-1"
-        return defineDirectory(directoryName)
+        return defineDirectory(directoryName, currentDirectory)
     
 def createPatterns(line):
     """
@@ -215,7 +215,7 @@ def textHighlighter(labels, regexps, codeFile, htmlName):# sExpressions = "../ex
         # Procesar caracter por caracter
         for character in range(0,len(line)):
             
-            
+            print(line[character])
             # Al detectar el final de un string sencillo
             if ((line[character] == '"') or (line[character] == "'")) and string and (line[character] == actualQuotationMark):
                 
@@ -279,7 +279,8 @@ def textHighlighter(labels, regexps, codeFile, htmlName):# sExpressions = "../ex
             # verificándolo con las expresiones regulares
             elif line[character] != '\n': 
                 for k in range(0, len(regexps)):
-                    matchwithprevious = re.fullmatch(regexps[k], listSegmentation[-1]+line[character])
+                    pattern = re.compile(regexps[k])
+                    matchwithprevious = re.fullmatch(pattern, listSegmentation[-1]+line[character])
                     if matchwithprevious is not None:
                         if labels[k] in ['delimiter','operator']:
                             delimiter = True

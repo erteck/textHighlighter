@@ -21,7 +21,7 @@ def main(directory,sExpressions,fileExtension):
     # Nombre tentativo del directorio donde se almacenarán los códigos resaltados. 
     directoryName = "Resultados"
     # Permite definir el nombre del directorio que se creará para almacenar los scripts resaltados.
-    directoryName = rt.defineDirectory(directoryName) 
+    directoryName = rt.defineDirectory(directoryName, directory)
     
     # Lectura de las expresiones-s que permiten identificar las categorías léxicas del lenguaje.
     data = rt.expressionsFile(sExpressions) 
@@ -41,7 +41,8 @@ def main(directory,sExpressions,fileExtension):
 # Permite marcar el tiempo de inicio de la ejecución del programa.      
 startTime = time.time()
 # Llama al método main proporcionándole las expresiones-s y la extensión del archivo.
-main(os.getcwd(),'expresionesS.txt', '.py')
+main('C:\\Users\\Jacqueline Zavala\\Documents\\GitHub\\textHighlighter\\Resaltador Paralelo\\Prueba', 'expresionesS.txt', '.py')
+#main(os.getcwd(),'expresionesS.txt', '.py')
 # Permite marcar el tiempo final de la ejecución del programa.     
 finishTime = time.time() - startTime
 # Imprime el tiempo de ejecución del programa.
