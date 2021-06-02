@@ -30,7 +30,8 @@ def main(directory,sExpressions,fileExtension):
     
     # Crea y se cambia al directorio en el que se almacenarán los scripts resaltados.
     os.mkdir(directoryName)
-    os.chdir(directoryName) 
+    os.chdir(directoryName)
+    rt.createCSS(data[0], [['integer', 'float', 'imaginary']]) 
     
     # Ciclo que envía cada archivo encontrado con la extensión proporcionada al método principal del resaltados de Texto.
     for file in files:

@@ -2,16 +2,18 @@
 # Edna Jacqueline Zavala Ortega A01750480
 # Erick Alberto Bustos Cruz A01378966
 
+from itertools import chain
 import re
 import os
 
-def nameHTML(file):
+def nameHTML(file, HTMLnames):
     """
     Función que recibe un string con terminación .py
     la cual cambia por la terminación .html
     """
     fileName = os.path.split(file) 
-    return fileName[1][:-2] + "html"
+    file = fileName[1][:-2] + "html"
+    #if file not in HTMLnames 
 
 def findFiles(directory,files, extension):
     """
@@ -51,6 +53,34 @@ def defineDirectory(directoryName, currentDirectory):
         directoryName += "-1"
         return defineDirectory(directoryName, currentDirectory)
     
+def createCSS(labels, identical = [[]]):
+    """
+    Función que permite crear un CSS dentro del directorio de los resultados ya que es indispensable
+    para visualizar los scripts resaltados. Recibe las etiquetas de las categorías léxicas del lenguaje
+    y opcionalmente una lista de listas con las etiquetas que se deben resaltar con el mismo color.
+    """
+    colors = ['orange', 'green', 'blue', 'red', 'deeppink', 'rgb(0, 137, 161)', 'gray', 'black', 
+              'rgba(174, 54, 243, 0.938)', 'rgb(182, 194, 11)', 'rgb(49, 207, 255)', 'rgb(122, 4, 87)',
+              'rgb(214, 30, 85)', 'rgb(1, 161, 86)','rgb(255, 102, 0)', 'rgb(61, 1, 11)']
+    css = ''
+    i = 0
+    for iterable in identical:
+        for element in iterable:
+            categoryFormat = element + '{\n\tcolor: '+ colors[i] +';\n}\n'
+            css += categoryFormat
+        i+=1        
+    for label in labels:
+        if label not in chain(*identical):
+            categoryFormat = label + '{\n\tcolor: '+ colors[i] +';\n}\n'
+            css += categoryFormat
+            if (i+1) == len(colors):
+                i=0
+            else:
+                i+=1
+    css += 'pre{\n\tfont-size: xx-large;\n}\n'    
+    with open ('estilos.css', 'w', encoding='utf-8') as f:
+        f.write(css)
+            
 def createPatterns(line):
     """
     Función que, dada una línea de un archivo de texto con expresiones s, regresa un string
@@ -106,7 +136,7 @@ def createPatterns(line):
         # Agregar los argumentos
         elif line[i - 1:i + 1] not in ["(*", '(.', '(#', '(+']:
             if(line[i] == '$'):
-                result = result + '.*'
+                result = result + '.'
             elif (line[i] == '8'):
                 lastSymbol.pop()
                 lastSymbol.append(')?')
@@ -179,7 +209,7 @@ def textHighlighter(labels, regexps, codeFile, htmlName):# sExpressions = "../ex
     html_template = """
     <html>
     <head>
-        <link rel="stylesheet" href="../estilos.css">
+        <link rel="stylesheet" href="estilos.css">
     </head>
     <body>
     <p><pre>"""

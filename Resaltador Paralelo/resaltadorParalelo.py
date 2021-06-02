@@ -41,7 +41,9 @@ def main(directory,sExpressions,cores, fileExtension):
     # Crea y se cambia al directorio en el que se almacenarán los scripts resaltados.
     os.mkdir(directoryName)
     os.chdir(directoryName)
+    rt.createCSS(data[0], [['integer', 'float', 'imaginary']]) 
     
+
     # Agrega a la lista htmlNames los nombres de los archivos html que se crearán como resultado del resaltado.
     for name in files:
         htmlNames.append(rt.nameHTML(name))
