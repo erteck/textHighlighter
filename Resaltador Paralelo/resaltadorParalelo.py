@@ -46,8 +46,8 @@ def main(directory,sExpressions,cores, fileExtension):
 
     # Agrega a la lista htmlNames los nombres de los archivos html que se crearán como resultado del resaltado.
     for name in files:
-        htmlNames.append(rt.nameHTML(name))
-    
+        htmlNames.append(rt.nameHTML(name, htmlNames))
+
     # Se crean tantos procesos como cores se haya especificado que tiene el procesador y le envía a cada uno un "chunk"
     # de tamaño "size" para que lo procese con la función parcial derivada de la función principal del textHighlighter.
     # Nota: dicho cambio fue necesario dado que dos de los argumentos son estáticos y no iterables. 

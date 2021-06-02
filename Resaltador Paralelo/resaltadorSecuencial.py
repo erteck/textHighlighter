@@ -33,16 +33,20 @@ def main(directory,sExpressions,fileExtension):
     os.chdir(directoryName)
     rt.createCSS(data[0], [['integer', 'float', 'imaginary']]) 
     
+    htmlNames = []
+    
+    for name in files:
+        htmlNames.append(rt.nameHTML(name,htmlNames))
+    
     # Ciclo que envía cada archivo encontrado con la extensión proporcionada al método principal del resaltados de Texto.
-    for file in files:
-        rt.textHighlighter(data[0],data[1], file, rt.nameHTML(file))
+    for i in range(len(files)):
+        rt.textHighlighter(data[0],data[1], files[i], htmlNames[i])
 
 
 
 # Permite marcar el tiempo de inicio de la ejecución del programa.      
 startTime = time.time()
 # Llama al método main proporcionándole las expresiones-s y la extensión del archivo.
-#main('d:\\Development\\GitHub\\textHighlighter2\\Resaltador Paralelo\\Prueba', 'expresionesS.txt', '.py')
 main(os.getcwd(),'expresionesS.txt', '.py')
 # Permite marcar el tiempo final de la ejecución del programa.     
 finishTime = time.time() - startTime
